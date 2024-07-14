@@ -1,1 +1,25 @@
-spring.application.name=halmisae
+# spring configuration
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/halmisae?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: root
+    password: 1111
+  messages:
+    basename: custom-error-messages
+  application:
+    name: halmisae
+  # JPA Hibernate configuration
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        hbm2ddl:
+          auto: create
+# default error message
+server:
+  error:
+    whitelabel:
+      enabled: true

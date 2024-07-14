@@ -1,0 +1,35 @@
+package com.halmisae.entity.Store;
+
+import com.halmisae.entity.Enum.OrderType;
+import com.halmisae.entity.User.ClosingOrder;
+import com.halmisae.entity.User.Reservation;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Sales {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int salesNumber;
+    private int paymentPrice;
+    private LocalDateTime doneDate;
+    private OrderType orderType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_number")
+    private Store store;
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "sales")
+    @JoinColumn(name = "order_number")
+    private ClosingOrder closingOrder;
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "sales")
+    @JoinColumn(name = "reserve_number")
+    private Reservation reservation;
+}
