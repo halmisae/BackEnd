@@ -4,10 +4,16 @@ import com.halmisae.entity.Store.NoShowFood;
 import com.halmisae.entity.Store.Sales;
 import com.halmisae.entity.Store.Store;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,10 +2,16 @@ package com.halmisae.entity.User;
 
 import com.halmisae.entity.Store.Store;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +27,7 @@ public class Rating {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "rating")
     @JoinColumn(name = "order_number")
     private ClosingOrder closingOrder;
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "rating")
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reserve_number")
     private Reservation reservation;
 }

@@ -4,18 +4,14 @@ import com.halmisae.entity.Enum.OrderType;
 import com.halmisae.entity.User.ClosingOrder;
 import com.halmisae.entity.User.Reservation;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Sales {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +22,10 @@ public class Sales {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_number")
     private Store store;
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "sales")
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_number")
     private ClosingOrder closingOrder;
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "sales")
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reserve_number")
     private Reservation reservation;
 }

@@ -7,19 +7,15 @@ import com.halmisae.entity.User.Favorite;
 import com.halmisae.entity.User.Rating;
 import com.halmisae.entity.User.Reservation;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +27,7 @@ public class Store {
     private String businessNumber;
     private String email;
     private String store_name;
-    private Category category;
+//    private Category category;
     private String address;
     private String storePhone;
     private String weekdayOpen;
