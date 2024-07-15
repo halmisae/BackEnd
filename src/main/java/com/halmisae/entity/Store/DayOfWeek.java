@@ -16,5 +16,5 @@ public class DayOfWeek {
     private int dayNumber;
     private Weekday dayOfWeek;
     @OneToMany(mappedBy = "dayOfWeek")
-    private List<StoreHoliday> storeHolidays;
+    private List<StoreHoliday> storeHoliday;
 }

@@ -26,7 +26,7 @@ public class Store {
     private String phone;
     private String businessNumber;
     private String email;
-    private String store_name;
+    private String storeName;
 //    private Category category;
     private String address;
     private String storePhone;
@@ -42,7 +42,7 @@ public class Store {
     @OneToMany(mappedBy = "store")
     private List<Sales> sales;
     @OneToMany(mappedBy = "store")
-    private List<StoreHoliday> storeHolidays;
+    private List<StoreHoliday> storeHoliday;
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "store")
     private ReservationDiscount reservationDiscount;
     @OneToMany(mappedBy = "store")
