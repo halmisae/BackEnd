@@ -10,7 +10,7 @@ public class StoreUpdateDTO {
     private String password;
     private String passwordCheck;
     private String phone;
-    private String store_name;
+    private String storeName;
     //    private Category category;
     private String address;
     private String storePhone;

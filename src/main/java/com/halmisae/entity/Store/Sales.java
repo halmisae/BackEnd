@@ -1,5 +1,6 @@
 package com.halmisae.entity.Store;
 
+import com.halmisae.entity.Enum.DoneType;
 import com.halmisae.entity.Enum.OrderType;
 import com.halmisae.entity.User.ClosingOrder;
 import com.halmisae.entity.User.Reservation;
@@ -19,6 +20,7 @@ public class Sales {
     private int paymentPrice;
     private LocalDateTime doneDate;
     private OrderType orderType;
+    private DoneType doneType;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_number")
     private Store store;

@@ -1,9 +1,11 @@
 package com.halmisae.dto.store;
 
 import com.halmisae.entity.Enum.Status;
+import com.halmisae.entity.Store.Store;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -12,8 +14,7 @@ public class StoreReadDTO {
     private String phone;
     private String businessNumber;
     private String email;
-    private String store_name;
-    //    private Category category;
+    private String storeName;
     private String address;
     private String storePhone;
     private String weekdayOpen;

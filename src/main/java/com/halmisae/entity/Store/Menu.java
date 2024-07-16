@@ -19,6 +19,7 @@ public class Menu {
     private int price;
     private String introduction;
     private String image;
+    private int noShowCount;
     private LocalDateTime registDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_number")

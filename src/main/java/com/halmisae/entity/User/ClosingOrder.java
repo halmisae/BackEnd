@@ -1,5 +1,6 @@
 package com.halmisae.entity.User;
 
+import com.halmisae.entity.Enum.RequestStatus;
 import com.halmisae.entity.Store.Sales;
 import com.halmisae.entity.Store.Store;
 import jakarta.persistence.*;
@@ -19,6 +20,7 @@ public class ClosingOrder {
     private int OrderNumber;
     private int quantity;
     private LocalDateTime orderDate;
+    private RequestStatus requestStatus;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "email")
     private User user;

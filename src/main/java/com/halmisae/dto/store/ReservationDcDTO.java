@@ -8,5 +8,5 @@ public class ReservationDcDTO {
     private int discount;
     private int unitTime;
     private int preorderDiscount;
-    private int overFee;
+    private int usageTime;
 }

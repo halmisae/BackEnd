@@ -8,5 +8,6 @@ public class MenuDTO {
     private int price;
     private String introduction;
     private String image;
+    private int noShowCount;
     private int storeNumber;
 }

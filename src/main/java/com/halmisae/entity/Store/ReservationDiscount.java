@@ -15,7 +15,7 @@ public class ReservationDiscount {
     private int discount;
     private int unitTime;
     private int preorderDiscount;
-    private int overFee;
+    private int usageTime;
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_number")
