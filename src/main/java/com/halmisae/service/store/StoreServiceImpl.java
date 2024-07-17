@@ -1,9 +1,6 @@
 package com.halmisae.service.store;
 
-import com.halmisae.dto.store.StoreCreateDTO;
-import com.halmisae.dto.store.StoreReadDTO;
-import com.halmisae.dto.store.StoreReadUserMainDTO;
-import com.halmisae.dto.store.StoreUpdateDTO;
+import com.halmisae.dto.store.*;
 import com.halmisae.entity.Enum.Status;
 import com.halmisae.entity.Store.*;
 import com.halmisae.repository.store.*;
@@ -18,7 +15,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class StoreServiceImpl {
+public class StoreServiceImpl implements StoreService{
     private final StoreRepository storeRepository;
     private final SalesRepository salesRepository;
     private final NoShowFoodRepository noShowFoodRepository;
@@ -31,18 +28,9 @@ public class StoreServiceImpl {
     List<Store> all = storeRepository.findAll();
 
     public Store createStore(StoreCreateDTO sc) {
-//        List<Sales> sales = new ArrayList<>();
-//        List<StoreHoliday> storeHoliday = new ArrayList<>();
-//        List<NoShowFood> noShowFood = new ArrayList<>();
-//        List<Menu> menu = new ArrayList<>();
-//        List<Favorite> favorite = new ArrayList<>();
-//        List<Rating> rating = new ArrayList<>();
-//        List<ClosingOrder> closingOrder = new ArrayList<>();
-//        List<Reservation> reservation = new ArrayList<>();
         ReservationDiscount reservationDiscount = new ReservationDiscount();
         ClosingDiscount closingDiscount = new ClosingDiscount();
         ClosingFood closingFood = new ClosingFood();
-//        Store store = new Store(0, sc.getId(), sc.getPassword(), sc.getName(), sc.getPhone(), sc.getBusinessNumber(), sc.getEmail(), sc.getStoreName(), sc.getAddress(), sc.getStorePhone(), sc.getWeekdayOpen(), sc.getWeekdayClose(), sc.getWeekendOpen(), sc.getWeekendClose(), sc.getBreakStart(), sc.getBreakEnd(), LocalDateTime.now(), Status.AVAILABLE, 0, sales, storeHoliday, reservationDiscount, noShowFood, closingDiscount, closingFood, menu, favorite, rating, closingOrder, reservation);
         Store store = new Store(0, sc.getId(), sc.getPassword(), sc.getName(), sc.getPhone(), sc.getBusinessNumber(), sc.getEmail(), sc.getStoreName(), sc.getAddress(), sc.getStorePhone(), sc.getWeekdayOpen(), sc.getWeekdayClose(), sc.getWeekendOpen(), sc.getWeekendClose(), sc.getBreakStart(), sc.getBreakEnd(), LocalDateTime.now(), Status.AVAILABLE, 0, new ArrayList<>(), new ArrayList<>(), reservationDiscount, new ArrayList<>(), closingDiscount, closingFood, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         reservationDiscountRepository.save(reservationDiscount);
         closingDiscountRepository.save(closingDiscount);
@@ -50,26 +38,33 @@ public class StoreServiceImpl {
         return storeRepository.save(store);
     }
 
-    public StoreReadUserMainDTO readStore(String userAddress) {
-
-        for(Store store : all) {
-            if (store.getAddress() == userAddress) {
-
-            }
-        }
-
-        return new StoreReadUserMainDTO();
-    }
-
-    public List<StoreReadDTO> readStoreList() {
+    @Override
+    public Boolean passwordCheck(StorePasswordCheckDTO spc) {
         return null;
     }
 
-    public StoreUpdateDTO updateStore() {
-        return new StoreUpdateDTO();
+    @Override
+    public StoreReadOwnerDTO readStoreOwner(int storeNumber) {
+        return null;
     }
 
-    public void deleteStore() {
+    @Override
+    public StoreUpdateOwnerDTO updateStoreOwner(StoreUpdateOwnerDTO uo) {
+        return null;
+    }
 
+    @Override
+    public StoreDTO readStore(int storeNumber) {
+        return null;
+    }
+
+    @Override
+    public StoreDTO updateStore(StoreDTO us) {
+        return null;
+    }
+
+    @Override
+    public Boolean deleteStore(int storeNumber) {
+        return null;
     }
 }

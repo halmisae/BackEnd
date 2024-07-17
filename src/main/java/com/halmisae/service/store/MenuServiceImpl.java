@@ -24,7 +24,7 @@ public class MenuServiceImpl {
     public Menu createMenu(MenuDTO m) {
         Store store = new Store();
         List<ReserveMenu> reserveMenu = new ArrayList<>();
-        Menu menu = new Menu(0, m.getMenuName(), m.getPrice(), m.getIntroduction(), m.getImage(), LocalDateTime.now(), store, reserveMenu);
+        Menu menu = new Menu(0, m.getMenuName(), m.getPrice(), m.getIntroduction(), m.getImage(), 0 ,LocalDateTime.now(), store, reserveMenu);
         storeRepository.save(store);
         return menuRepository.save(menu);
     }

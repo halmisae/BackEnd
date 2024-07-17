@@ -1,17 +1,14 @@
 package com.halmisae.dto.store;
 
+import com.halmisae.entity.Enum.Weekday;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class StoreUpdateDTO {
+public class StoreDTO {
     private int storeNumber;
-    private String password;
-    private String passwordCheck;
-    private String phone;
     private String storeName;
-    //    private Category category;
     private String address;
     private String storePhone;
     private String weekdayOpen;
@@ -20,5 +17,5 @@ public class StoreUpdateDTO {
     private String weekendClose;
     private String breakStart;
     private String breakEnd;
-    private List<Integer> storeHoliday;
+    private List<Weekday> storeHoliday;
 }

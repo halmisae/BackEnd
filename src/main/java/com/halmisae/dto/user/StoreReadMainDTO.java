@@ -1,17 +1,14 @@
-package com.halmisae.dto.store;
+package com.halmisae.dto.user;
 
 import lombok.Data;
 
 @Data
-public class StroeReadUserDetailDTO {
+public class StoreReadMainDTO {
+    private int storeNumber;
     private String storeName;
     private String image;
     private float rating;
     private String closingPrice;
-    private String pickupTime;
-    private String openTime;
-    private String closeTime;
-    private String address;
     private Boolean isFavorite;
     private int closingFoodCount;
 }

@@ -19,6 +19,7 @@ public class ClosingOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int OrderNumber;
     private int quantity;
+    private int totalPrice;
     private LocalDateTime orderDate;
     private RequestStatus requestStatus;
     @ManyToOne(fetch = FetchType.LAZY)

@@ -20,7 +20,7 @@ public class ReservationDiscountServiceImpl {
 
     public ReservationDiscount createReservationDc(ReservationDcDTO rd) {
         Store store = storeRepository.findById(rd.getStoreNumber()).get();
-        ReservationDiscount reservationDiscount = new ReservationDiscount(rd.getStoreNumber(), rd.getDiscount(), rd.getUnitTime(), rd.getPreorderDiscount(), rd.getOverFee(), store);
+        ReservationDiscount reservationDiscount = new ReservationDiscount(rd.getStoreNumber(), rd.getDiscount(), rd.getUnitTime(), rd.getPreorderDiscount(), rd.getUsageTime(), store);
         return reservationDiscountRepository.save(reservationDiscount);
     }
 

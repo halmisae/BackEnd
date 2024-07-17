@@ -1,8 +1,7 @@
 package com.halmisae.service.user;
 
-import com.halmisae.dto.user.UserCreateDTO;
-import com.halmisae.dto.user.UserReadDTO;
-import com.halmisae.dto.user.UserUpdateDTO;
+import com.halmisae.dto.user.StoreReadMainDTO;
+import com.halmisae.dto.user.*;
 import com.halmisae.entity.Enum.Status;
 import com.halmisae.entity.User.*;
 import com.halmisae.repository.user.UserRepository;
@@ -30,28 +29,55 @@ public class UserServiceImpl implements UserService{
         return userRepository.save(user);
     }
 
-    // 누가 볼 화면인지 정의가 필요하다.
     @Override
-    public UserReadDTO readUserByEmail(String email) {
-        User user = userRepository.findById(email).get();
-        return new UserReadDTO(user.getEmail(), user.getUserName(), user.getNickname(), user.getPhone(), user.getPenaltyPoint(), user.getStatus(), user.getPenaltyNumber(), user.getRegistDate());
+    public List<StoreReadMainDTO> readFavorite(String email) {
+        return null;
     }
 
     @Override
-    public List<UserReadDTO> readUserList() {
-        return userRepository.findALLUserReadDTO();
+    public List<Object> readHistory(String email) {
+        return null;
     }
 
     @Override
-    public User updateUser(UserUpdateDTO uu) {
+    public RatingClosingOrderDTO createClosingOrderRating(RatingClosingOrderDTO rco) {
+        return null;
+    }
+
+    @Override
+    public Boolean passwordCheck(UserPasswordCheckDTO upc) {
+        return null;
+    }
+
+    @Override
+    public UserUpdateDTO readUser(UserUpdateDTO uu) {
+        return null;
+    }
+
+//    // 누가 볼 화면인지 정의가 필요하다.
+//    @Override
+//    public UserReadDTO readUserByEmail(String email) {
+//        User user = userRepository.findById(email).get();
+//        return new UserReadDTO(user.getEmail(), user.getUserName(), user.getNickname(), user.getPhone(), user.getPenaltyPoint(), user.getStatus(), user.getPenaltyNumber(), user.getRegistDate());
+//    }
+//
+//    @Override
+//    public List<UserReadDTO> readUserList() {
+//        return userRepository.findALLUserReadDTO();
+//    }
+
+    @Override
+    public UserUpdateDTO updateUser(UserUpdateDTO uu) {
         User user = userRepository.findById(uu.getEmail()).get();
         user.setPassword(uu.getPassword());
         user.setPhone(uu.getPhone());
-        return userRepository.save(user);
+        userRepository.save(user);
+        return new UserUpdateDTO();
     }
 
     @Override
-    public void deleteUser(String email) {
+    public boolean deleteUser(String email) {
         userRepository.deleteById(email);
+        return userRepository.findById(email).isEmpty();
     }
 }

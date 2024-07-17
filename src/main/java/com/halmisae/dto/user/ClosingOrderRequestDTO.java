@@ -6,12 +6,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ClosingOrderDTO {
-    private int orderNumber;
+public class ClosingOrderRequestDTO {
     private int quantity;
     private int totalPrice;
-    private LocalDateTime orderDate;
-    private RequestStatus requestStatus;
     private String email;
     private int storeNumber;
 }

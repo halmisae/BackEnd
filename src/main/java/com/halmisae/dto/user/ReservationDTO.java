@@ -1,9 +1,12 @@
 package com.halmisae.dto.user;
 
 import com.halmisae.entity.Enum.RequestStatus;
+import com.halmisae.entity.Store.Menu;
+import com.halmisae.entity.User.ReserveMenu;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class ReservationDTO {
@@ -15,4 +18,6 @@ public class ReservationDTO {
     private RequestStatus requestStatus;
     private String email;
     private int storeNumber;
+    private List<ReserveMenu> reserveMenu;
+    private List<Menu> menu;
 }
