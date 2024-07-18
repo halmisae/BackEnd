@@ -25,13 +25,11 @@ public class StoreServiceImpl implements StoreService{
     private final ClosingDiscountRepository closingDiscountRepository;
     private final ClosingFoodRepository closingFoodRepository;
 
-    List<Store> all = storeRepository.findAll();
-
     public Store createStore(StoreCreateDTO sc) {
         ReservationDiscount reservationDiscount = new ReservationDiscount();
         ClosingDiscount closingDiscount = new ClosingDiscount();
         ClosingFood closingFood = new ClosingFood();
-        Store store = new Store(0, sc.getId(), sc.getPassword(), sc.getName(), sc.getPhone(), sc.getBusinessNumber(), sc.getEmail(), sc.getStoreName(), sc.getAddress(), sc.getStorePhone(), sc.getWeekdayOpen(), sc.getWeekdayClose(), sc.getWeekendOpen(), sc.getWeekendClose(), sc.getBreakStart(), sc.getBreakEnd(), LocalDateTime.now(), Status.AVAILABLE, 0, new ArrayList<>(), new ArrayList<>(), reservationDiscount, new ArrayList<>(), closingDiscount, closingFood, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        Store store = new Store(0, sc.getId(), sc.getPassword(), sc.getName(), sc.getPhone(), sc.getBusinessNumber(), sc.getEmail(), sc.getStoreName(), sc.getImage(), sc.getAverageRating(), sc.getAddress(), sc.getStorePhone(), sc.getWeekdayOpen(), sc.getWeekdayClose(), sc.getWeekendOpen(), sc.getWeekendClose(), sc.getBreakStart(), sc.getBreakEnd(), LocalDateTime.now(), Status.AVAILABLE, 0, new ArrayList<>(), new ArrayList<>(), reservationDiscount, new ArrayList<>(), closingDiscount, closingFood, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         reservationDiscountRepository.save(reservationDiscount);
         closingDiscountRepository.save(closingDiscount);
         closingFoodRepository.save(closingFood);

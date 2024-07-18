@@ -27,7 +27,8 @@ public class Store {
     private String businessNumber;
     private String email;
     private String storeName;
-//    private Category category;
+    private String image;
+    private float averageRating;
     private String address;
     private String storePhone;
     private String weekdayOpen;
