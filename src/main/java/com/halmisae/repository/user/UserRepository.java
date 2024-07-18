@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, String> {
-    @Query("SELECT new com.halmisae.dto.user.UserReadDTO(u.email, u.userName, u.nickname, u.phone, u.penaltyPoint, u.status, u.penaltyNumber, u.registDate) FROM User u")
+    @Query("SELECT new com.halmisae.dto.user.UserReadDTO(u.email, u.userName, u.nickname, u.phone, u.address, u.penaltyPoint, u.status, u.penaltyNumber, u.registDate) FROM User u")
     List<UserReadDTO> findALLUserReadDTO();
 }

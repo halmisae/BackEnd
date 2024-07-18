@@ -3,12 +3,11 @@ package com.halmisae.service.store;
 import com.halmisae.dto.user.ClosingOrderDTO;
 import com.halmisae.dto.user.ReservationDTO;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProcessingService {
     // GET 오늘의 예약, 마감 주문 전체 보기 (ClosingOrder, Reservation)
-    List<Object> readDailySchedule(LocalDateTime day);
+    List<Object> readDailySchedule(int storeNumber);
     // POST 신규 마감할인상품 수락
     ClosingOrderDTO closingOrderAccept(int orderNumber);
     // POST 신규 마감할인상품 거절

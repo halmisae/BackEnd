@@ -20,13 +20,15 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     @Override
-    public User createUser(UserCreateDTO uc) {
+    public UserCreateResponseDTO createUser(UserCreateRequestDTO uc) {
         List<Favorite> favorite = new ArrayList<>();
         List<Rating> rating = new ArrayList<>();
         List<ClosingOrder> closingOrder = new ArrayList<>();
         List<Reservation> reservation = new ArrayList<>();
-        User user = new User(uc.getEmail(), uc.getId(), uc.getPassword(), uc.getUserName(), uc.getNickname(), uc.getPhone(), 0, Status.AVAILABLE, 0, LocalDateTime.now(), favorite, rating, closingOrder, reservation);
-        return userRepository.save(user);
+        User user = new User(uc.getEmail(), uc.getId(), uc.getPassword(), uc.getUserName(), uc.getNickname(), uc.getPhone(), uc.getAddress(), 0, Status.AVAILABLE, 0, LocalDateTime.now(), favorite, rating, closingOrder, reservation);
+        User s = userRepository.save(user);
+        boolean result = !(s.getEmail().isEmpty());
+        return new UserCreateResponseDTO(result, s.getUserName(), s.getNickname(), s.getPhone(), s.getAddress());
     }
 
     @Override

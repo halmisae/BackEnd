@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class ClosingOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int OrderNumber;
+    private int orderNumber;
     private int quantity;
     private int totalPrice;
     private LocalDateTime orderDate;

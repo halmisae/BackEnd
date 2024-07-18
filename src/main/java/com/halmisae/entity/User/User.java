@@ -21,6 +21,7 @@ public class User {
     private String userName;
     private String nickname;
     private String phone;
+    private String address;
     private int penaltyPoint;
     private Status status;
     private int penaltyNumber;

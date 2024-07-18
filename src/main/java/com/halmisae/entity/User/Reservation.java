@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -37,4 +38,6 @@ public class Reservation {
     private Sales sales;
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "reservation")
     private Rating rating;
+    @OneToMany(mappedBy = "reservation")
+    private List<ReserveMenu> reserveMenu;
 }

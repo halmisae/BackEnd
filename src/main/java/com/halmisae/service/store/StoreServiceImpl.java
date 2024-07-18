@@ -2,6 +2,7 @@ package com.halmisae.service.store;
 
 import com.halmisae.dto.store.*;
 import com.halmisae.entity.Enum.Status;
+import com.halmisae.entity.Enum.Weekday;
 import com.halmisae.entity.Store.*;
 import com.halmisae.repository.store.*;
 import lombok.RequiredArgsConstructor;
@@ -17,23 +18,34 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService{
     private final StoreRepository storeRepository;
-    private final SalesRepository salesRepository;
-    private final NoShowFoodRepository noShowFoodRepository;
-    private final MenuRepository menuRepository;
-    private final StoreHolidayRepository storeHolidayRepository;
     private final ReservationDiscountRepository reservationDiscountRepository;
     private final ClosingDiscountRepository closingDiscountRepository;
     private final ClosingFoodRepository closingFoodRepository;
+    private final StoreHolidayRepository storeHolidayRepository;
 
-    public Store createStore(StoreCreateDTO sc) {
+    public StoreCreateResponseDTO createStore(StoreCreateRequestDTO sc) {
         ReservationDiscount reservationDiscount = new ReservationDiscount();
         ClosingDiscount closingDiscount = new ClosingDiscount();
         ClosingFood closingFood = new ClosingFood();
-        Store store = new Store(0, sc.getId(), sc.getPassword(), sc.getName(), sc.getPhone(), sc.getBusinessNumber(), sc.getEmail(), sc.getStoreName(), sc.getImage(), sc.getAverageRating(), sc.getAddress(), sc.getStorePhone(), sc.getWeekdayOpen(), sc.getWeekdayClose(), sc.getWeekendOpen(), sc.getWeekendClose(), sc.getBreakStart(), sc.getBreakEnd(), LocalDateTime.now(), Status.AVAILABLE, 0, new ArrayList<>(), new ArrayList<>(), reservationDiscount, new ArrayList<>(), closingDiscount, closingFood, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+
+        List<StoreHoliday> storeHoliday = new ArrayList<>();
+        Store store = new Store(0, sc.getId(), sc.getPassword(), sc.getName(), sc.getPhone(), sc.getBusinessNumber(), sc.getEmail(), sc.getStoreName(), sc.getImage(), sc.getAverageRating(), sc.getAddress(), sc.getStorePhone(), sc.getWeekdayOpen(), sc.getWeekdayClose(), sc.getWeekendOpen(), sc.getWeekendClose(), sc.getBreakStart(), sc.getBreakEnd(), LocalDateTime.now(), Status.AVAILABLE, 0, new ArrayList<>(), storeHoliday, reservationDiscount, new ArrayList<>(), closingDiscount, closingFood, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        Store savedStore = storeRepository.save(store);
+        for (Weekday wd : sc.getStoreHoliday()) {
+            StoreHoliday sh = new StoreHoliday(new StoreHolidayID(savedStore.getStoreNumber(), wd), savedStore);
+            storeHolidayRepository.save(sh);
+            storeHoliday.add(sh);
+        }
+        savedStore.setStoreHoliday(storeHoliday);
+        reservationDiscount.setStore(store);
+        closingDiscount.setStore(store);
+        closingFood.setStore(store);
         reservationDiscountRepository.save(reservationDiscount);
         closingDiscountRepository.save(closingDiscount);
         closingFoodRepository.save(closingFood);
-        return storeRepository.save(store);
+        Store s = storeRepository.save(store);
+        boolean result = s.getStoreNumber() > -1;
+        return new StoreCreateResponseDTO(result, s.getName(), s.getPhone(), s.getStoreName(), s.getAddress(), s.getStorePhone());
     }
 
     @Override

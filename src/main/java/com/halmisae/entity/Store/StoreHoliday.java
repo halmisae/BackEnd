@@ -1,5 +1,6 @@
 package com.halmisae.entity.Store;
 
+import com.halmisae.entity.Enum.Weekday;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +17,4 @@ public class StoreHoliday {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_number")
     private Store store;
-    @MapsId("dayNumber")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "day_number")
-    private DayOfWeek dayOfWeek;
 }

@@ -1,5 +1,6 @@
 package com.halmisae.entity.Store;
 
+import com.halmisae.entity.Enum.Weekday;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -18,5 +19,5 @@ import java.io.Serializable;
 @Data
 public class StoreHolidayID implements Serializable {
     private int storeNumber;
-    private int dayNumber;
+    private Weekday dayOfWeek;
 }

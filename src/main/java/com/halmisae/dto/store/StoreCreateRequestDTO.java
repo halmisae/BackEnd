@@ -1,14 +1,12 @@
 package com.halmisae.dto.store;
 
-import com.halmisae.entity.Enum.Category;
-import com.halmisae.entity.Enum.Status;
+import com.halmisae.entity.Enum.Weekday;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class StoreCreateDTO {
+public class StoreCreateRequestDTO {
     private String id;
     private String password;
     private String passwordCheck;
@@ -27,5 +25,5 @@ public class StoreCreateDTO {
     private String weekendClose;
     private String breakStart;
     private String breakEnd;
-    private List<Integer> storeHoliday;
+    private List<Weekday> storeHoliday;
 }

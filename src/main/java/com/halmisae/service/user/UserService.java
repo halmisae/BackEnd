@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
     // POST 회원가입
-    User createUser(UserCreateDTO uc);
+    UserCreateResponseDTO createUser(UserCreateRequestDTO uc);
     // GET 찜 목록 보기
     List<StoreReadMainDTO> readFavorite(String email);
     // GET 사용내역 및 별점 (Sales, Rating)
