@@ -1,6 +1,7 @@
 package com.halmisae.dto.store;
 
-import com.halmisae.dto.user.ReserveMenuDTO;
+import com.halmisae.dto.user.ReserveMenuCreateDTO;
+import com.halmisae.entity.Enum.OrderType;
 import com.halmisae.entity.Enum.RequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,8 +20,9 @@ public class ReservationProcessingReadDTO {
     private int useTime;
     private int people;
     private int totalPrice;
+    private OrderType orderType;
     private RequestStatus requestStatus;
     private String email;
     private int storeNumber;
-    private List<ReserveMenuDTO> reserveMenuDTOs;
+    private List<ReserveMenuCreateDTO> reserveMenuCreateDTOS;
 }

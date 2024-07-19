@@ -1,6 +1,7 @@
 package com.halmisae.dto.user;
 
 import com.halmisae.entity.Enum.OrderType;
+import com.halmisae.entity.Enum.RequestStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class ReservationReadDTO {
     private int useTime;
     private int people;
     private int totalPrice;
+    private RequestStatus requestStatus;
     private LocalDateTime pickupTime;
     private int orderNumber;
     private int reserveNumber;

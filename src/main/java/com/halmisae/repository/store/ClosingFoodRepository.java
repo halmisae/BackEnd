@@ -1,6 +1,5 @@
 package com.halmisae.repository.store;
 
-import com.halmisae.dto.store.ClosingDcDTO;
 import com.halmisae.dto.store.ClosingFoodDTO;
 import com.halmisae.entity.Store.ClosingFood;
 import org.springframework.data.jpa.repository.JpaRepository;

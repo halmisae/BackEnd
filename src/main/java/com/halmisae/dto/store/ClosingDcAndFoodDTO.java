@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClosingDcDTO {
+public class ClosingDcAndFoodDTO {
     private int storeNumber;
     private int closingPrice;
+    private int quantity;
     private LocalDateTime pickupTime;
 }

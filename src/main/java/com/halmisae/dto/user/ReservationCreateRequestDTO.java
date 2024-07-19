@@ -1,5 +1,6 @@
 package com.halmisae.dto.user;
 
+import com.halmisae.entity.Enum.OrderType;
 import com.halmisae.entity.User.ReserveMenu;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,5 +19,6 @@ public class ReservationCreateRequestDTO {
     private int useTime;
     private int people;
     private int totalPrice;
-    private List<ReserveMenu> reserveMenu;
+    private OrderType orderType;
+    private List<ReserveMenuCreateDTO> reserveMenu;
 }

@@ -1,9 +1,12 @@
 package com.halmisae.dto.user;
 
+import com.halmisae.entity.Enum.OrderType;
+import com.halmisae.entity.Enum.RequestStatus;
 import com.halmisae.entity.User.ReserveMenu;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.coyote.Request;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,5 +22,7 @@ public class ReservationCreateResponseDTO {
     private int useTime;
     private int people;
     private int totalPrice;
+    private OrderType orderType;
+    private RequestStatus requestStatus;
     private List<ReserveMenu> reserveMenu;
 }

@@ -1,9 +1,11 @@
 package com.halmisae.service.store;
 
+import com.halmisae.dto.store.MenuCreateRequestDTO;
 import com.halmisae.dto.store.MenuDTO;
+import com.halmisae.dto.store.MenuDeleteRequestDTO;
+import com.halmisae.dto.store.MenuReadRequestDTO;
 import com.halmisae.entity.Store.Menu;
 import com.halmisae.entity.Store.Store;
-import com.halmisae.entity.User.ReserveMenu;
 import com.halmisae.repository.store.MenuRepository;
 import com.halmisae.repository.store.StoreRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,26 +19,38 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MenuServiceImpl {
+public class MenuServiceImpl implements MenuService {
     private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
 
-    public Menu createMenu(MenuDTO m) {
-        Store store = new Store();
-        List<ReserveMenu> reserveMenu = new ArrayList<>();
-        Menu menu = new Menu(0, m.getMenuName(), m.getPrice(), m.getIntroduction(), m.getImage(), 0 ,LocalDateTime.now(), store, reserveMenu);
-        storeRepository.save(store);
-        return menuRepository.save(menu);
+    @Override
+    public List<MenuDTO> readMenuList(MenuReadRequestDTO mrr) {
+        return menuRepository.findAllByStoreNumber(mrr.getStoreNumber());
     }
 
-    public List<MenuDTO> readMenuListByStoreNumber() {
-        return null;
+    @Override
+    public MenuDTO createMenu(MenuCreateRequestDTO mcr) {
+        Store store = storeRepository.findById(mcr.getStoreNumber()).get();
+        Menu menu = new Menu(0, mcr.getMenuName(), mcr.getPrice(), mcr.getIntroduction(), mcr.getImage(), 0 ,LocalDateTime.now(), store, new ArrayList<>());
+        Menu m = menuRepository.save(menu);
+        return new MenuDTO(m.getMenuNumber(), m.getMenuName(), m.getPrice(), m.getIntroduction(), m.getImage(), m.getStore().getStoreNumber());
     }
 
-    public MenuDTO updateMenu() {
-        return null;
+    @Override
+    public MenuDTO updateMenu(MenuDTO m) {
+        Menu menu = menuRepository.findById(m.getMenuNumber()).get();
+        menu.setMenuName(m.getMenuName());
+        menu.setPrice(m.getPrice());
+        menu.setIntroduction(m.getIntroduction());
+        menu.setImage(m.getImage());
+        Menu sm = menuRepository.save(menu);
+        return new MenuDTO(sm.getMenuNumber(), sm.getMenuName(), sm.getPrice(), sm.getIntroduction(), sm.getImage(), sm.getStore().getStoreNumber());
     }
 
-    public void deleteMenu() {
+    @Override
+    public boolean deleteMenu(MenuDeleteRequestDTO mdr) {
+        Menu menu = menuRepository.findById(mdr.getMenuNumber()).get();
+        menuRepository.delete(menu);
+        return menuRepository.existsById(mdr.getMenuNumber());
     }
 }

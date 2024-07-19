@@ -7,11 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuDTO {
+public class MenuDeleteRequestDTO {
     private int menuNumber;
-    private String menuName;
-    private int price;
-    private String introduction;
-    private String image;
-    private int storeNumber;
 }

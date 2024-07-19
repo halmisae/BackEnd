@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReserveMenuDTO {
-    private int reserveNumber;
+public class ReserveMenuCreateDTO {
     private int menuNumber;
     private int quantity;
-    private int menuPrice;
 }

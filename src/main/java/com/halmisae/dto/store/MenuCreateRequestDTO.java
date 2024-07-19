@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuDTO {
-    private int menuNumber;
+public class MenuCreateRequestDTO {
+    private int storeNumber;
     private String menuName;
     private int price;
     private String introduction;
     private String image;
-    private int storeNumber;
 }

@@ -7,11 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuDTO {
-    private int menuNumber;
-    private String menuName;
-    private int price;
-    private String introduction;
-    private String image;
+public class ReservationDcPreorderDTO {
     private int storeNumber;
+    private int preorderDiscount;
 }
