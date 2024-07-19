@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MenuReadRequestDTO {
-    private int StoreNumber;
+    private int storeNumber;
 }

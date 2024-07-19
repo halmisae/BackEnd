@@ -1,7 +1,5 @@
 package com.halmisae.controller.user;
 
-import com.halmisae.dto.store.StoreCreateRequestDTO;
-import com.halmisae.dto.store.StoreCreateResponseDTO;
 import com.halmisae.dto.user.ReservationCreateRequestDTO;
 import com.halmisae.dto.user.ReservationCreateResponseDTO;
 import com.halmisae.service.user.ReservationService;

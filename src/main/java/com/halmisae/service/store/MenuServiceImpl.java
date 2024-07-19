@@ -2,8 +2,6 @@ package com.halmisae.service.store;
 
 import com.halmisae.dto.store.MenuCreateRequestDTO;
 import com.halmisae.dto.store.MenuDTO;
-import com.halmisae.dto.store.MenuDeleteRequestDTO;
-import com.halmisae.dto.store.MenuReadRequestDTO;
 import com.halmisae.entity.Store.Menu;
 import com.halmisae.entity.Store.Store;
 import com.halmisae.repository.store.MenuRepository;
@@ -24,8 +22,8 @@ public class MenuServiceImpl implements MenuService {
     private final StoreRepository storeRepository;
 
     @Override
-    public List<MenuDTO> readMenuList(MenuReadRequestDTO mrr) {
-        return menuRepository.findAllByStoreNumber(mrr.getStoreNumber());
+    public List<MenuDTO> readMenuList(int storeNumber) {
+        return menuRepository.findAllByStoreNumber(storeNumber);
     }
 
     @Override
@@ -48,9 +46,9 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public boolean deleteMenu(MenuDeleteRequestDTO mdr) {
-        Menu menu = menuRepository.findById(mdr.getMenuNumber()).get();
+    public boolean deleteMenu(int menuNumber) {
+        Menu menu = menuRepository.findById(menuNumber).get();
         menuRepository.delete(menu);
-        return menuRepository.existsById(mdr.getMenuNumber());
+        return menuRepository.existsById(menuNumber);
     }
 }

@@ -24,5 +24,5 @@ public class ReservationCreateResponseDTO {
     private int totalPrice;
     private OrderType orderType;
     private RequestStatus requestStatus;
-    private List<ReserveMenu> reserveMenu;
+    private List<ReserveMenuResponseDTO> reserveMenu;
 }

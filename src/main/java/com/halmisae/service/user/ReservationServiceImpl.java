@@ -57,7 +57,12 @@ public class ReservationServiceImpl implements ReservationService {
         }
         savedReservation.setReserveMenu(rmList);
         Reservation r = reservationRepository.save(savedReservation);
+        List<ReserveMenuResponseDTO> rms = new ArrayList<>();
+        for (ReserveMenu rm : r.getReserveMenu()) {
+            ReserveMenuResponseDTO rmr = new ReserveMenuResponseDTO(rm.getReservation().getReserveNumber(), rm.getMenu().getMenuNumber(), rm.getQuantity());
+            rms.add(rmr);
+        }
         boolean result = r.getReserveNumber() > -1;
-        return new ReservationCreateResponseDTO(result, r.getUser().getEmail(), r.getStore().getStoreNumber(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), r.getReserveMenu());
+        return new ReservationCreateResponseDTO(result, r.getUser().getEmail(), r.getStore().getStoreNumber(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), rms);
     }
 }
