@@ -1,7 +1,7 @@
-package com.halmisae.dto;
+package com.halmisae.dto.store;
 
-import com.halmisae.dto.store.MenuDTO;
 import com.halmisae.dto.user.ReserveMenuResponseDTO;
+import com.halmisae.entity.Enum.DoneType;
 import com.halmisae.entity.Enum.OrderType;
 import com.halmisae.entity.Enum.RequestStatus;
 import lombok.AllArgsConstructor;
@@ -22,8 +22,7 @@ public class ReservationNoShowResponseDTO {
     private int totalPrice;
     private OrderType orderType;
     private RequestStatus requestStatus;
-    private boolean isNoShow;
-    private String message;
+    private DoneType doneType;
     private String email;
     private int storeNumber;
     private List<ReserveMenuResponseDTO> reserveMenu;

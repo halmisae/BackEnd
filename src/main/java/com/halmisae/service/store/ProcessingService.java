@@ -1,8 +1,6 @@
 package com.halmisae.service.store;
 
-import com.halmisae.dto.store.ClosingOrderRejectRequestDTO;
-import com.halmisae.dto.store.ReservationDoneResponseDTO;
-import com.halmisae.dto.store.ReservationRejectRequestDTO;
+import com.halmisae.dto.store.*;
 import com.halmisae.dto.user.ClosingOrderDTO;
 import com.halmisae.dto.user.ReservationDTO;
 
@@ -22,7 +20,7 @@ public interface ProcessingService {
     // POST 진행중 예약 완료;
     ReservationDoneResponseDTO reservationDone(int reserveNumber);
     // POST 진행중 예약 노쇼;
-    ReservationDTO reservationNoShow(int reserveNumber);
+    ReservationNoShowResponseDTO reservationNoShow(int reserveNumber);
     // POST 마감할인상품 완료;
     ClosingOrderDTO closingOrderDone(int orderNumber);
     // POST 마감할인상품 노쇼;

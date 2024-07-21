@@ -1,5 +1,6 @@
 package com.halmisae.dto.user;
 
+import com.halmisae.entity.Enum.DoneType;
 import com.halmisae.entity.Enum.RequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class ClosingOrderDTO {
     private int totalPrice;
     private LocalDateTime orderDate;
     private RequestStatus requestStatus;
+    private DoneType doneType;
     private String rejectMessage;
     private String email;
     private int storeNumber;
