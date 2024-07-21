@@ -1,6 +1,7 @@
-package com.halmisae.dto.user;
+package com.halmisae.dto;
 
 import com.halmisae.dto.store.MenuDTO;
+import com.halmisae.dto.user.ReserveMenuResponseDTO;
 import com.halmisae.entity.Enum.OrderType;
 import com.halmisae.entity.Enum.RequestStatus;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationDTO {
+public class ReservationNoShowResponseDTO {
     private LocalDateTime reserveTime;
     private LocalDateTime visitTime;
     private int useTime;
@@ -21,6 +22,7 @@ public class ReservationDTO {
     private int totalPrice;
     private OrderType orderType;
     private RequestStatus requestStatus;
+    private boolean isNoShow;
     private String message;
     private String email;
     private int storeNumber;

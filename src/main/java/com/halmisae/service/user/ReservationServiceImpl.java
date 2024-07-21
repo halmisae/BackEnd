@@ -31,9 +31,6 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
-    private final NoShowFoodRepository noShowFoodRepository;
-    private final SalesRepository salesRepository;
-    private final RatingRepository ratingRepository;
     private final ReserveMenuRepository reserveMenuRepository;
     private final MenuRepository menuRepository;
 

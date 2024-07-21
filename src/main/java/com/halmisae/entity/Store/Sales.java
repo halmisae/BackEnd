@@ -21,13 +21,13 @@ public class Sales {
     private LocalDateTime doneDate;
     private OrderType orderType;
     private DoneType doneType;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_number")
-    private Store store;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_number")
     private ClosingOrder closingOrder;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reserve_number")
     private Reservation reservation;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_number")
+    private Store store;
 }
