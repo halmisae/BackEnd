@@ -13,5 +13,5 @@ public class ClosingDcAndFoodDTO {
     private int storeNumber;
     private int closingPrice;
     private int quantity;
-    private LocalDateTime pickupTime;
+    private String pickupTime;
 }
