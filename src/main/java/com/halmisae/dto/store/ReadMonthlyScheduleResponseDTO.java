@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SalesReadRequestDTO {
-    private int storeNumber;
-    private LocalDateTime month;
+public class ReadMonthlyScheduleResponseDTO {
+    private LocalDate date;
+    private int reserveCount;
 }

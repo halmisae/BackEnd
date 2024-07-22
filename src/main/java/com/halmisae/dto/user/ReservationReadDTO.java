@@ -17,7 +17,7 @@ public class ReservationReadDTO {
     private int people;
     private int totalPrice;
     private RequestStatus requestStatus;
-    private String pickupTime;
+    private LocalDateTime pickupTime;
     private int orderNumber;
     private int reserveNumber;
 }

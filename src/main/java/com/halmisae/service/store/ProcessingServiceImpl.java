@@ -26,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -47,15 +49,20 @@ public class ProcessingServiceImpl implements ProcessingService {
     @Override
     // GET 오늘의 예약, 마감 주문 전체 보기 (ClosingOrder, Reservation)
     public List<Object> readDailySchedule(int storeNumber) {
+        // 오늘것만 가지고 오도록 수정하기
         List<Object> dailySchedule = new ArrayList<>();
-        List<ClosingOrderProcessingReadDTO> closingOrders = closingOrderRepository.findAllByStoreNumber(storeNumber);
-        List<Reservation> reservations = reservationRepository.findAllByStoreNumber(storeNumber);
+        LocalDate today = LocalDate.now();
+        List<ClosingOrder> closingOrders = closingOrderRepository.findByVisitTimeAndStoreNumber(storeNumber, today.atStartOfDay(), today.atTime(LocalTime.MAX));
+        List<Reservation> reservations = reservationRepository.findByVisitTimeAndStoreNumber(storeNumber, today.atStartOfDay(), today.atTime(LocalTime.MAX));
         for (Reservation r : reservations) {
             List<ReserveMenuCreateDTO> reserveMenus = reserveMenuRepository.findAllByReserveNumber(r.getReserveNumber());
             ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), r.getUser().getEmail(), r.getStore().getStoreNumber(), reserveMenus);
             dailySchedule.add(rpr);
         }
-        dailySchedule.addAll(closingOrders);
+        for (ClosingOrder co : closingOrders) {
+            ClosingOrderProcessingReadDTO copr = new ClosingOrderProcessingReadDTO(co.getOrderNumber(), co.getQuantity(), co.getTotalPrice(), OrderType.CLOSING_ORDER, co.getOrderDate(), co.getRequestStatus(), co.getUser().getEmail(), co.getStore().getStoreNumber());
+            dailySchedule.add(copr);
+        }
         return dailySchedule;
     }
 

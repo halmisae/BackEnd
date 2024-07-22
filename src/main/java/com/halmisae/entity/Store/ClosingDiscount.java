@@ -15,7 +15,7 @@ public class ClosingDiscount {
     @Id
     private int storeNumber;
     private int closingPrice;
-    private String pickupTime;
+    private LocalDateTime pickupTime;
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_number")

@@ -1,5 +1,6 @@
 package com.halmisae.dto.store;
 
+import com.halmisae.entity.Enum.OrderType;
 import com.halmisae.entity.Enum.RequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,8 @@ import java.time.LocalDateTime;
 public class ClosingOrderProcessingReadDTO {
     private int orderNumber;
     private int quantity;
+    private int totalPrice;
+    private OrderType orderType;
     private LocalDateTime orderDate;
     private RequestStatus requestStatus;
     private String email;

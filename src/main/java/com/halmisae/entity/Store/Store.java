@@ -1,6 +1,5 @@
 package com.halmisae.entity.Store;
 
-import com.halmisae.entity.Enum.Category;
 import com.halmisae.entity.Enum.Status;
 import com.halmisae.entity.User.ClosingOrder;
 import com.halmisae.entity.User.Favorite;

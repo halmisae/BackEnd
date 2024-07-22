@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClosingDcAndFoodDTO {
+public class ReadScheduleRequestDTO {
     private int storeNumber;
-    private int closingPrice;
-    private int quantity;
-    private LocalDateTime pickupTime;
+    private LocalDateTime day;
 }

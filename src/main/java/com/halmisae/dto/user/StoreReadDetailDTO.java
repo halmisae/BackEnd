@@ -2,6 +2,8 @@ package com.halmisae.dto.user;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class StoreReadDetailDTO {
     private int storeNumber;
@@ -13,7 +15,7 @@ public class StoreReadDetailDTO {
     private String closeTime;
     private String breakStart;
     private String breakEnd;
-    private String pickupTime;
+    private LocalDateTime pickupTime;
     private String address;
     private Boolean isFavorite;
     private int closingFoodCount;
