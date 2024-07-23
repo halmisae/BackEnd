@@ -22,6 +22,9 @@ import com.halmisae.repository.user.ClosingOrderRepository;
 import com.halmisae.repository.user.ReservationRepository;
 import com.halmisae.repository.user.ReserveMenuRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,13 +49,26 @@ public class ProcessingServiceImpl implements ProcessingService {
     private final SalesRepository salesRepository;
     private final NoShowFoodRepository noShowFoodRepository;
 
-    @Override
-    @Transactional
-    public void init() {
-        int maxSalesNumber = salesRepository.findMaxSalesNumber();
-        int newAutoIncrementValue = maxSalesNumber + 1;
-        salesRepository.resetAutoIncrement(newAutoIncrementValue);
-    }
+    // SalesRepository 키 값 AUTO_INCREMENT 중복 처리 코드
+//    @PersistenceContext
+//    private EntityManager entityManager;
+//    @Override
+//    @Transactional
+//    public void init() {
+//        Query maxIdQuery = entityManager.createNativeQuery("SELECT MAX(sales_number) FROM sales");
+//        Integer maxId = (Integer) maxIdQuery.getSingleResult();
+//        if (maxId == null) {
+//            maxId = 0;
+//        }
+//
+//        // Reset the AUTO_INCREMENT value
+//        Query resetAutoIncrementQuery = entityManager.createNativeQuery("ALTER TABLE sales AUTO_INCREMENT = :nextId");
+//        resetAutoIncrementQuery.setParameter("nextId", maxId + 1);
+//        resetAutoIncrementQuery.executeUpdate();
+////        int maxSalesNumber = salesRepository.findMaxSalesNumber();
+////        int newAutoIncrementValue = maxSalesNumber + 1;
+////        salesRepository.resetAutoIncrement(newAutoIncrementValue);
+//    }
 
 
     @Override
@@ -195,9 +211,9 @@ public class ProcessingServiceImpl implements ProcessingService {
             MenuDTO m = new MenuDTO(menu.getMenuNumber(), menu.getMenuName(), menu.getPrice(), menu.getIntroduction(), menu.getImage(), menu.getStore().getStoreNumber());
             mList.add(m);
         }
-        // 판매 내역에 추가
-        Sales sales = new Sales(0, reservation.getTotalPrice(), LocalDateTime.now(), OrderType.RESERVATION, DoneType.NO_SHOW, null, reservation, reservation.getStore());
-        salesRepository.save(sales);
+//        // 판매 내역에 추가
+//        Sales sales = new Sales(0, reservation.getTotalPrice(), LocalDateTime.now(), OrderType.RESERVATION, DoneType.NO_SHOW, null, reservation, reservation.getStore());
+//        salesRepository.save(sales);
         // 노쇼 상품에 추가
         NoShowFood noShowFood = new NoShowFood(LocalDateTime.now(), new NoShowFoodID(reservation.getStore().getStoreNumber(), reserveNumber), reservation.getStore(), reservation);
         noShowFoodRepository.save(noShowFood);
@@ -223,12 +239,13 @@ public class ProcessingServiceImpl implements ProcessingService {
     // POST 마감할인상품 노쇼;
     public ClosingOrderDTO closingOrderNoShow(int orderNumber) {
         ClosingOrder closingOrder = closingOrderRepository.findById(orderNumber).get();
-        // 판매 내역에 추가
-        Sales sales = new Sales(0, closingOrder.getTotalPrice(), LocalDateTime.now(), OrderType.CLOSING_ORDER, DoneType.NO_SHOW, closingOrder, null, closingOrder.getStore());
-        salesRepository.save(sales);
+//        // 판매 내역에 추가
+//        Sales sales = new Sales(0, closingOrder.getTotalPrice(), LocalDateTime.now(), OrderType.CLOSING_ORDER, DoneType.NO_SHOW, closingOrder, null, closingOrder.getStore());
+//        salesRepository.save(sales);
         // 마감할인상품 개수 더하기
         int originalQuantity = closingOrder.getStore().getClosingFood().getQuantity();
         closingOrder.getStore().getClosingFood().setQuantity(originalQuantity + closingOrder.getQuantity());
+        closingOrder.setRequestStatus(RequestStatus.NOT_YET);
         closingOrderRepository.save(closingOrder);
         return new ClosingOrderDTO(closingOrder.getOrderNumber(), closingOrder.getQuantity(), closingOrder.getTotalPrice(), closingOrder.getOrderDate(), closingOrder.getRequestStatus(), DoneType.NO_SHOW, null, null, closingOrder.getStore().getStoreNumber());
     }

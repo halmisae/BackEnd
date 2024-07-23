@@ -49,6 +49,6 @@ public class MenuServiceImpl implements MenuService {
     public boolean deleteMenu(int menuNumber) {
         Menu menu = menuRepository.findById(menuNumber).get();
         menuRepository.delete(menu);
-        return menuRepository.existsById(menuNumber);
+        return !(menuRepository.existsById(menuNumber));
     }
 }
