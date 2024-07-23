@@ -27,3 +27,8 @@ server:
   error:
     whitelabel:
       enabled: true
+
+# JWT TokenProvider
+jwt:
+  issuer: tmddn1679@naver.com
+  secret_key: halmisae

@@ -1,4 +1,4 @@
-package com.halmisae;
+package com.halmisae.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
