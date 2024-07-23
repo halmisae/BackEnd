@@ -6,6 +6,7 @@ import com.halmisae.entity.Enum.Status;
 import com.halmisae.entity.User.*;
 import com.halmisae.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService{
         User user = new User(uc.getEmail(), uc.getId(), uc.getPassword(), uc.getUserName(), uc.getNickname(), uc.getPhone(), uc.getAddress(), 0, Status.AVAILABLE, 0, LocalDateTime.now(), favorite, rating, closingOrder, reservation);
         User s = userRepository.save(user);
         boolean result = !(s.getEmail().isEmpty());
-        return new UserCreateResponseDTO(result, s.getUserName(), s.getNickname(), s.getPhone(), s.getAddress());
+        return new UserCreateResponseDTO(result, s.getUsername(), s.getNickname(), s.getPhone(), s.getAddress());
     }
 
     @Override
@@ -81,5 +82,12 @@ public class UserServiceImpl implements UserService{
     public boolean deleteUser(String email) {
         userRepository.deleteById(email);
         return userRepository.findById(email).isEmpty();
+    }
+
+    @Override
+    // 사용자 이름(email)으로 사용자의 정보를 가져오는 메서드
+    public User loadUserByUsername(String email) {
+        return userRepository.findById(email)
+                .orElseThrow(() -> new IllegalArgumentException((email)));
     }
 }

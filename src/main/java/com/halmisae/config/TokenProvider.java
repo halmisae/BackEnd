@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -21,14 +22,16 @@ import java.util.Set;
 public class TokenProvider {
     private final JwtProperties jwtProperties;
 
-    public String generateToken(User user, Duration expiredAt) {
+    public String generateToken(UserDetails userDetails, Duration expiredAt) {
         Date now = new Date();
+        User user = (User) userDetails; // 캐스팅
         return makeToken(new Date(now.getTime() + expiredAt.toMillis()), user);
     }
 
     // 1. JWT 토큰 생성 메서드
-    private String makeToken(Date expiry, User user) {
+    private String makeToken(Date expiry, UserDetails userDetails) {
         Date now = new Date();
+        User user = (User) userDetails; // 캐스팅
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)   // 헤더 typ : JWT
@@ -36,7 +39,7 @@ public class TokenProvider {
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .setSubject(user.getEmail())
-                .claim("id", user.getId())
+                .claim("email", user.getEmail())
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
     }
@@ -58,7 +61,12 @@ public class TokenProvider {
         Claims claims = getClaims(token);
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
 
-        return new UsernamePasswordAuthenticationToken(new org.springframework.security.core.userdetails.User(claims.getSubject(), "", authorities), token, authorities);
+        User user = new User(claims.getSubject(),
+                "", // 비밀번호는 사용되지 않으므로 빈 문자열로 설정
+                authorities.toString());
+        user.setEmail(claims.get("email", String.class));
+
+        return new UsernamePasswordAuthenticationToken(user, token, authorities);
     }
 
     private Claims getClaims(String token) {
@@ -68,8 +76,9 @@ public class TokenProvider {
                 .getBody();
     }
 
-    public Long getUserId(String token) {
+    // 4. 토큰 기반으로 유저 ID를 가져오는 메서드
+    public String getUserId(String token) {
         Claims claims = getClaims(token);
-        return claims.get("id", Long.class);
+        return claims.get("email", String.class);
     }
 }

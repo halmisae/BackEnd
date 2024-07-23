@@ -22,4 +22,6 @@ public interface UserService {
     UserUpdateDTO updateUser(UserUpdateDTO uu);
     // DELETE 회원탈퇴
     boolean deleteUser(String email);
+    // 사용자 이름(email)으로 사용자의 정보를 가져오는 메서드
+    User loadUserByUsername(String email);
 }
