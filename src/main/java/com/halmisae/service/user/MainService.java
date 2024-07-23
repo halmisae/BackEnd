@@ -6,17 +6,17 @@ import java.util.List;
 
 public interface MainService {
     // GET 메인페이지(전체)
-    List<StoreReadMainDTO> readAllStore(StoreReadMainRequestDTO srmr);
-    // GET 메인페이지(노쇼할인)
-    List<StoreReadMainDTO> readNoShowStore(StoreReadMainRequestDTO srmr);
+    List<StoreReadMainDTO> readAllStore();
+//    // GET 메인페이지(노쇼할인)
+//    List<StoreReadMainDTO> readNoShowStore(StoreReadMainRequestDTO srmr);
     // GET 메인페이지(마감할인)
-    List<StoreReadMainDTO> readClosingDiscountStore(StoreReadMainRequestDTO srmr);
+    List<StoreReadMainDTO> readClosingDiscountStore();
 //    // GET 메인페이지(찜)
 //    List<StoreReadMainDTO> readFavoriteStore(StoreReadMainRequestDTO srmr);
     // GET 검색 결과 페이지
-    List<StoreReadMainDTO> searchStore(StoreSearchRequestDTO ssr);
+    List<StoreReadMainDTO> searchStore(String keyword);
     // GET 가게 상세 정보 보기
-    StoreReadDetailDTO readStoreDetail(StoreDetailRequestDTO sdr);
+    StoreReadDetailDTO readStoreDetail(int storeNumber);
 //    // POST 가게 찜하기
 //    FavoriteDTO createFavorite(FavoriteDTO f);
 //    // DELETE 가게 찜 취소

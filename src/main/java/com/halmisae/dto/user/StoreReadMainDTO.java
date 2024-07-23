@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,8 +13,8 @@ public class StoreReadMainDTO {
     private int storeNumber;
     private String storeName;
     private String image;
-    private float averageRating;
+//    private float averageRating;
     private int closingPrice;
-    private Boolean isFavorite;
+//    private Boolean isFavorite;
     private int closingFoodCount;
 }
