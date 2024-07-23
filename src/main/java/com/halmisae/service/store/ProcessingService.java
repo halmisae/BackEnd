@@ -7,6 +7,9 @@ import com.halmisae.dto.user.ReservationDTO;
 import java.util.List;
 
 public interface ProcessingService {
+    // AUTO_INCREMENT 값 재설정
+    void init();
+
     // GET 오늘의 예약, 마감 주문 전체 보기 (ClosingOrder, Reservation)
     List<Object> readDailySchedule(int storeNumber);
     // POST 신규 마감할인상품 수락

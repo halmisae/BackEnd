@@ -1,4 +1,4 @@
-package com.halmisae.controller.store;
+package com.halmisae.controller;
 
 import com.halmisae.dto.store.*;
 import com.halmisae.dto.user.ClosingOrderDTO;
@@ -9,8 +9,10 @@ import com.halmisae.service.store.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -82,13 +84,15 @@ public class StoreController {
     // ReservationScheduleService : 가게 예약 현황 페이지
     @GetMapping("/schedule")
     @Operation(summary = "날짜별 예약 보기", description = "현재 월의 날짜별 예약 건수를 달력에 표시하여 보여준다.")
-    public List<ReadMonthlyScheduleResponseDTO> readMonthlySchedule(@RequestBody ReadScheduleRequestDTO today) {
-        return reservationScheduleService.readMonthlySchedule(today);
+    public List<ReadMonthlyScheduleResponseDTO> readMonthlySchedule(@RequestParam int storeNumber,
+                                                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime today) {
+        return reservationScheduleService.readMonthlySchedule(storeNumber, today);
     }
     @GetMapping("/schedule/daily")
     @Operation(summary = "해당 날짜의 예약 보기", description = "달력에서 날짜를 선택하여 해당 날짜의 예약 목록을 보여준다.")
-    public List<ReservationDTO> readDailySchedule(@RequestBody ReadScheduleRequestDTO day) {
-        return reservationScheduleService.readDailySchedule(day);
+    public List<ReservationDTO> readDailySchedule(@RequestParam int storeNumber,
+                                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime day) {
+        return reservationScheduleService.readDailySchedule(storeNumber, day);
     }
     @PutMapping("/schedule/daily/reservation/cancel")
     @Operation(summary = "예약 취소하기", description = "가게의 해당 예약을 취소한다.")
@@ -104,8 +108,9 @@ public class StoreController {
     // SalesService : 매출 조회 페이지
     @GetMapping("/sales")
     @Operation(summary = "월별 매출 데이터 보기", description = "가게의 월별 매출 데이터를 그래프와 내역으로 보여준다.")
-    public List<Object> readSales(@RequestBody SalesReadRequestDTO sr) {
-        return salesService.readSales(sr);
+    public List<Object> readSales(@RequestParam int storeNumber,
+                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime month) {
+        return salesService.readSales(storeNumber, month);
     }
 
     // MenuService : 가게 설정 페이지 - my 매장 관리 - 메뉴 관리

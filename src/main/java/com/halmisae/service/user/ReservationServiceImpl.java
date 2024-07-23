@@ -1,17 +1,17 @@
 package com.halmisae.service.user;
 
+import com.halmisae.dto.store.MenuDTO;
 import com.halmisae.dto.user.*;
 import com.halmisae.entity.Enum.RequestStatus;
+import com.halmisae.entity.Enum.Weekday;
 import com.halmisae.entity.Store.Menu;
 import com.halmisae.entity.Store.Store;
+import com.halmisae.entity.Store.StoreHoliday;
 import com.halmisae.entity.User.Reservation;
 import com.halmisae.entity.User.ReserveMenu;
 import com.halmisae.entity.User.ReserveMenuID;
 import com.halmisae.entity.User.User;
-import com.halmisae.repository.store.MenuRepository;
-import com.halmisae.repository.store.NoShowFoodRepository;
-import com.halmisae.repository.store.SalesRepository;
-import com.halmisae.repository.store.StoreRepository;
+import com.halmisae.repository.store.*;
 import com.halmisae.repository.user.RatingRepository;
 import com.halmisae.repository.user.ReservationRepository;
 import com.halmisae.repository.user.ReserveMenuRepository;
@@ -33,17 +33,27 @@ public class ReservationServiceImpl implements ReservationService {
     private final StoreRepository storeRepository;
     private final ReserveMenuRepository reserveMenuRepository;
     private final MenuRepository menuRepository;
+    private final StoreHolidayRepository storeHolidayRepository;
 
     @Override
-    public ReservationReadDetailDTO readReservationDetail(ReservationReadDetailRequestDTO rrdr) {
-        return null;
+    // GET 가게 예약 보기 화면, 날짜 선택 보기
+    public ReservationReadDetailDTO readReservationDetail(int storeNumber) {
+        Store store = storeRepository.findById(storeNumber).get();
+        List<StoreHoliday> shList = storeHolidayRepository.findAllByStoreNumber(storeNumber);
+        List<Weekday> shl = new ArrayList<>();
+        for (StoreHoliday sh : shList) shl.add(sh.getId().getDayOfWeek());
+        List<MenuDTO> ml = menuRepository.findAllByStoreNumber(storeNumber);
+        return new ReservationReadDetailDTO(storeNumber, shl, store.getReservationDiscount().getUsageTime(), ml);
     }
 
     @Override
+    // POST 예약완료
     public ReservationCreateResponseDTO createReservation(ReservationCreateRequestDTO rr) {
-        User user = userRepository.findById(rr.getEmail()).get();
         Store store = storeRepository.findById(rr.getStoreNumber()).get();
-        Reservation reservation = new Reservation(0, LocalDateTime.now(), rr.getVisitTime(), rr.getUseTime(), rr.getPeople(), rr.getTotalPrice(), rr.getOrderType(), RequestStatus.NOT_YET, user, store, null, null, null, new ArrayList<>());
+        Reservation reservation = new Reservation(0, LocalDateTime.now(), rr.getVisitTime(), rr.getUseTime(), rr.getPeople(), rr.getTotalPrice(), rr.getOrderType(), RequestStatus.NOT_YET, null, store, null, null, null, new ArrayList<>());
+        // 유저가 있을 경우의 예약
+//        User user = userRepository.findById(rr.getEmail()).get();
+//        Reservation reservation = new Reservation(0, LocalDateTime.now(), rr.getVisitTime(), rr.getUseTime(), rr.getPeople(), rr.getTotalPrice(), rr.getOrderType(), RequestStatus.NOT_YET, user, store, null, null, null, new ArrayList<>());
         Reservation savedReservation = reservationRepository.save(reservation);
         List<ReserveMenu> rmList = new ArrayList<>();
         for (ReserveMenuCreateDTO rmc : rr.getReserveMenu()) {
@@ -60,6 +70,6 @@ public class ReservationServiceImpl implements ReservationService {
             rms.add(rmr);
         }
         boolean result = r.getReserveNumber() > -1;
-        return new ReservationCreateResponseDTO(result, r.getUser().getEmail(), r.getStore().getStoreNumber(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), rms);
+        return new ReservationCreateResponseDTO(result, null, r.getStore().getStoreNumber(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), rms);
     }
 }

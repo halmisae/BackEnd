@@ -21,6 +21,7 @@ import com.halmisae.repository.store.SalesRepository;
 import com.halmisae.repository.user.ClosingOrderRepository;
 import com.halmisae.repository.user.ReservationRepository;
 import com.halmisae.repository.user.ReserveMenuRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,14 @@ public class ProcessingServiceImpl implements ProcessingService {
     private final SalesRepository salesRepository;
     private final NoShowFoodRepository noShowFoodRepository;
 
+    @Override
+    @Transactional
+    public void init() {
+        int maxSalesNumber = salesRepository.findMaxSalesNumber();
+        int newAutoIncrementValue = maxSalesNumber + 1;
+        salesRepository.resetAutoIncrement(newAutoIncrementValue);
+    }
+
 
     @Override
     // GET 오늘의 예약, 마감 주문 전체 보기 (ClosingOrder, Reservation)
@@ -56,11 +65,11 @@ public class ProcessingServiceImpl implements ProcessingService {
         List<Reservation> reservations = reservationRepository.findByVisitTimeAndStoreNumber(storeNumber, today.atStartOfDay(), today.atTime(LocalTime.MAX));
         for (Reservation r : reservations) {
             List<ReserveMenuCreateDTO> reserveMenus = reserveMenuRepository.findAllByReserveNumber(r.getReserveNumber());
-            ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), r.getUser().getEmail(), r.getStore().getStoreNumber(), reserveMenus);
+            ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, r.getStore().getStoreNumber(), reserveMenus);
             dailySchedule.add(rpr);
         }
         for (ClosingOrder co : closingOrders) {
-            ClosingOrderProcessingReadDTO copr = new ClosingOrderProcessingReadDTO(co.getOrderNumber(), co.getQuantity(), co.getTotalPrice(), OrderType.CLOSING_ORDER, co.getOrderDate(), co.getRequestStatus(), co.getUser().getEmail(), co.getStore().getStoreNumber());
+            ClosingOrderProcessingReadDTO copr = new ClosingOrderProcessingReadDTO(co.getOrderNumber(), co.getQuantity(), co.getTotalPrice(), OrderType.CLOSING_ORDER, co.getOrderDate(), co.getRequestStatus(), null, co.getStore().getStoreNumber());
             dailySchedule.add(copr);
         }
         return dailySchedule;
@@ -72,7 +81,7 @@ public class ProcessingServiceImpl implements ProcessingService {
         ClosingOrder closingOrder = closingOrderRepository.findById(orderNumber).get();
         closingOrder.setRequestStatus(RequestStatus.ACCEPT);
         ClosingOrder sco = closingOrderRepository.save(closingOrder);
-        return new ClosingOrderDTO(sco.getOrderNumber(), sco.getQuantity(), sco.getTotalPrice(), sco.getOrderDate(), sco.getRequestStatus(), DoneType.NOT_YET, null, sco.getUser().getEmail(), sco.getStore().getStoreNumber());
+        return new ClosingOrderDTO(sco.getOrderNumber(), sco.getQuantity(), sco.getTotalPrice(), sco.getOrderDate(), sco.getRequestStatus(), DoneType.NOT_YET, null, null, sco.getStore().getStoreNumber());
     }
 
     @Override
@@ -81,7 +90,7 @@ public class ProcessingServiceImpl implements ProcessingService {
         ClosingOrder closingOrder = closingOrderRepository.findById(corr.getOrderNumber()).get();
         closingOrder.setRequestStatus(RequestStatus.REJECT);
         ClosingOrder sco = closingOrderRepository.save(closingOrder);
-        return new ClosingOrderDTO(sco.getOrderNumber(), sco.getQuantity(), sco.getTotalPrice(), sco.getOrderDate(), sco.getRequestStatus(), DoneType.NOT_YET, corr.getRejectMessage(), sco.getUser().getEmail(), sco.getStore().getStoreNumber());
+        return new ClosingOrderDTO(sco.getOrderNumber(), sco.getQuantity(), sco.getTotalPrice(), sco.getOrderDate(), sco.getRequestStatus(), DoneType.NOT_YET, corr.getRejectMessage(), null, sco.getStore().getStoreNumber());
     }
 
     @Override
@@ -102,7 +111,7 @@ public class ProcessingServiceImpl implements ProcessingService {
                 MenuDTO m = new MenuDTO(menu.getMenuNumber(), menu.getMenuName(), menu.getPrice(), menu.getIntroduction(), menu.getImage(), menu.getStore().getStoreNumber());
                 mList.add(m);
             }
-            return new ReservationDTO(r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, r.getUser().getEmail(), r.getStore().getStoreNumber(), rmList, mList);
+            return new ReservationDTO(r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, null, r.getStore().getStoreNumber(), rmList, mList);
         } else {
             // 노쇼 예약일 경우
 //            List<ReserveMenu> originalrmList = r.getReserveMenu();
@@ -134,12 +143,13 @@ public class ProcessingServiceImpl implements ProcessingService {
             MenuDTO m = new MenuDTO(menu.getMenuNumber(), menu.getMenuName(), menu.getPrice(), menu.getIntroduction(), menu.getImage(), menu.getStore().getStoreNumber());
             mList.add(m);
         }
-        return new ReservationDTO(sr.getReserveTime(), sr.getVisitTime(), sr.getUseTime(), sr.getPeople(), sr.getTotalPrice(), sr.getOrderType(), sr.getRequestStatus(), null, sr.getUser().getEmail(), sr.getStore().getStoreNumber(), rmList, mList);
+        return new ReservationDTO(sr.getReserveTime(), sr.getVisitTime(), sr.getUseTime(), sr.getPeople(), sr.getTotalPrice(), sr.getOrderType(), sr.getRequestStatus(), null, null, sr.getStore().getStoreNumber(), rmList, mList);
     }
 
     @Override
     // POST 진행중 예약 완료;
     public ReservationDoneResponseDTO reservationDone(int reserveNumber) {
+        // 진행중 Accept 인지 확인
         Reservation reservation = reservationRepository.findById(reserveNumber).get();
 
         // 이용시간 초과 계산
@@ -164,12 +174,13 @@ public class ProcessingServiceImpl implements ProcessingService {
         salesRepository.save(sales);
         reservation.setSales(sales);
         reservationRepository.save(reservation);
-        return new ReservationDoneResponseDTO(reservation.getReserveTime(), visitTime, reservation.getUseTime(), reservation.getPeople(), reservation.getTotalPrice(), reservation.getOrderType(), reservation.getRequestStatus(), doneType, reservation.getUser().getEmail(), reservation.getStore().getStoreNumber(), rmList, mList);
+        return new ReservationDoneResponseDTO(reservation.getReserveTime(), visitTime, reservation.getUseTime(), reservation.getPeople(), reservation.getTotalPrice(), reservation.getOrderType(), reservation.getRequestStatus(), doneType, null, reservation.getStore().getStoreNumber(), rmList, mList);
     }
 
     @Override
     // POST 진행중 예약 노쇼;
     public ReservationNoShowResponseDTO reservationNoShow(int reserveNumber) {
+        // 진행중 Accept 인지 우선 확인, 시간이 초과되었는지 확인하기
         Reservation reservation = reservationRepository.findById(reserveNumber).get();
 
         List<ReserveMenuResponseDTO> rmList = new ArrayList<>();
@@ -193,7 +204,7 @@ public class ProcessingServiceImpl implements ProcessingService {
         // 예약 내역의 요청 상태 노쇼로 바꾸기
         reservation.setRequestStatus(RequestStatus.NOT_YET);
         reservationRepository.save(reservation);
-        return new ReservationNoShowResponseDTO(reservation.getReserveTime(), reservation.getVisitTime(), reservation.getUseTime(), reservation.getPeople(), reservation.getTotalPrice(), reservation.getOrderType(), reservation.getRequestStatus(), DoneType.NO_SHOW, reservation.getUser().getEmail(), reservation.getStore().getStoreNumber(), rmList, mList);
+        return new ReservationNoShowResponseDTO(reservation.getReserveTime(), reservation.getVisitTime(), reservation.getUseTime(), reservation.getPeople(), reservation.getTotalPrice(), reservation.getOrderType(), reservation.getRequestStatus(), DoneType.NO_SHOW, null, reservation.getStore().getStoreNumber(), rmList, mList);
     }
 
     @Override
@@ -205,7 +216,7 @@ public class ProcessingServiceImpl implements ProcessingService {
         salesRepository.save(sales);
         closingOrder.setSales(sales);
         closingOrderRepository.save(closingOrder);
-        return new ClosingOrderDTO(closingOrder.getOrderNumber(), closingOrder.getQuantity(), closingOrder.getTotalPrice(), closingOrder.getOrderDate(), closingOrder.getRequestStatus(), DoneType.COMPLETE, null, closingOrder.getUser().getEmail(), closingOrder.getStore().getStoreNumber());
+        return new ClosingOrderDTO(closingOrder.getOrderNumber(), closingOrder.getQuantity(), closingOrder.getTotalPrice(), closingOrder.getOrderDate(), closingOrder.getRequestStatus(), DoneType.COMPLETE, null, null, closingOrder.getStore().getStoreNumber());
     }
 
     @Override
@@ -219,6 +230,6 @@ public class ProcessingServiceImpl implements ProcessingService {
         int originalQuantity = closingOrder.getStore().getClosingFood().getQuantity();
         closingOrder.getStore().getClosingFood().setQuantity(originalQuantity + closingOrder.getQuantity());
         closingOrderRepository.save(closingOrder);
-        return new ClosingOrderDTO(closingOrder.getOrderNumber(), closingOrder.getQuantity(), closingOrder.getTotalPrice(), closingOrder.getOrderDate(), closingOrder.getRequestStatus(), DoneType.NO_SHOW, null, closingOrder.getUser().getEmail(), closingOrder.getStore().getStoreNumber());
+        return new ClosingOrderDTO(closingOrder.getOrderNumber(), closingOrder.getQuantity(), closingOrder.getTotalPrice(), closingOrder.getOrderDate(), closingOrder.getRequestStatus(), DoneType.NO_SHOW, null, null, closingOrder.getStore().getStoreNumber());
     }
 }

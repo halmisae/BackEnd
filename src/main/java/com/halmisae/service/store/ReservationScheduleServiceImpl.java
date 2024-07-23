@@ -2,19 +2,21 @@ package com.halmisae.service.store;
 
 import com.halmisae.dto.store.MenuDTO;
 import com.halmisae.dto.store.ReadMonthlyScheduleResponseDTO;
-import com.halmisae.dto.store.ReadScheduleRequestDTO;
 import com.halmisae.dto.user.*;
 import com.halmisae.entity.Enum.RequestStatus;
+import com.halmisae.entity.Store.ClosingFood;
 import com.halmisae.entity.Store.Menu;
 import com.halmisae.entity.User.ClosingOrder;
 import com.halmisae.entity.User.Reservation;
 import com.halmisae.entity.User.ReserveMenu;
+import com.halmisae.repository.store.ClosingFoodRepository;
 import com.halmisae.repository.user.ClosingOrderRepository;
 import com.halmisae.repository.user.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,26 +27,27 @@ import java.util.List;
 public class ReservationScheduleServiceImpl implements ReservationScheduleService {
     private final ReservationRepository reservationRepository;
     private final ClosingOrderRepository closingOrderRepository;
+    private final ClosingFoodRepository closingFoodRepository;
 
     @Override
     // GET 날짜별 예약 보기
-    public List<ReadMonthlyScheduleResponseDTO> readMonthlySchedule(ReadScheduleRequestDTO today) {
+    public List<ReadMonthlyScheduleResponseDTO> readMonthlySchedule(int storeNumber, LocalDateTime today) {
         List<ReadMonthlyScheduleResponseDTO> reserveList = new ArrayList<>();
         for (int i = 0; i < 90; i++) {
-            int cnt = (reservationRepository.countByVisitTimeAndStoreNumber(today.getStoreNumber(), today.getDay().toLocalDate().atStartOfDay(), today.getDay().toLocalDate().atTime(LocalTime.MAX))).intValue();
-            ReadMonthlyScheduleResponseDTO rmsr = new ReadMonthlyScheduleResponseDTO(today.getDay().toLocalDate(), cnt);
+            int cnt = (reservationRepository.countByVisitTimeAndStoreNumber(storeNumber, today.toLocalDate().atStartOfDay(), today.toLocalDate().atTime(LocalTime.MAX))).intValue();
+            ReadMonthlyScheduleResponseDTO rmsr = new ReadMonthlyScheduleResponseDTO(today.toLocalDate(), cnt);
             reserveList.add(rmsr);
-            today.getDay().plusDays(1);
+            today = today.plusDays(1);
         }
         return reserveList;
     }
 
     @Override
     // GET 해당 날짜의 예약 보기
-    public List<ReservationDTO> readDailySchedule(ReadScheduleRequestDTO day) {
+    public List<ReservationDTO> readDailySchedule(int storeNumber, LocalDateTime day) {
         List<ReservationDTO> reserveList = new ArrayList<>();
 
-        List<Reservation> reservations = reservationRepository.findByVisitTimeAndStoreNumber(day.getStoreNumber(), day.getDay().toLocalDate().atStartOfDay(), day.getDay().toLocalDate().atTime(LocalTime.MAX));
+        List<Reservation> reservations = reservationRepository.findByVisitTimeAndStoreNumber(storeNumber, day.toLocalDate().atStartOfDay(), day.toLocalDate().atTime(LocalTime.MAX));
         for (Reservation r : reservations) {
             List<ReserveMenuResponseDTO> reserveMenu = new ArrayList<>();
             List<MenuDTO> menu = new ArrayList<>();
@@ -55,7 +58,7 @@ public class ReservationScheduleServiceImpl implements ReservationScheduleServic
                 MenuDTO m = new MenuDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
                 menu.add(m);
             }
-            ReservationDTO rd = new ReservationDTO(r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, r.getUser().getEmail(), r.getStore().getStoreNumber(), reserveMenu, menu);
+            ReservationDTO rd = new ReservationDTO(r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, null, r.getStore().getStoreNumber(), reserveMenu, menu);
             reserveList.add(rd);
         }
         return reserveList;
@@ -76,15 +79,19 @@ public class ReservationScheduleServiceImpl implements ReservationScheduleServic
             MenuDTO m = new MenuDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
             menu.add(m);
         }
-        return new ReservationDTO(sr.getReserveTime(), sr.getVisitTime(), sr.getUseTime(), sr.getPeople(), sr.getTotalPrice(), sr.getOrderType(), sr.getRequestStatus(), "가게측의 사정에 의하여 예약을 취소했습니다.", sr.getUser().getEmail(), sr.getStore().getStoreNumber(), reserveMenu, menu);
+        return new ReservationDTO(sr.getReserveTime(), sr.getVisitTime(), sr.getUseTime(), sr.getPeople(), sr.getTotalPrice(), sr.getOrderType(), sr.getRequestStatus(), "가게측의 사정에 의하여 예약을 취소했습니다.", null, sr.getStore().getStoreNumber(), reserveMenu, menu);
     }
 
     @Override
     // PUT 마감할인상품 주문 취소하기
     public ClosingOrderDTO deleteClosingOrder(int orderNumber) {
+        // Accept 만 취소하기로 변경
         ClosingOrder closingOrder = closingOrderRepository.findById(orderNumber).get();
         closingOrder.setRequestStatus(RequestStatus.REJECT);
         ClosingOrder sco = closingOrderRepository.save(closingOrder);
-        return new ClosingOrderDTO(sco.getOrderNumber(), sco.getQuantity(), sco.getTotalPrice(), sco.getOrderDate(), sco.getRequestStatus(), null, "가게측의 사정에 의하여 주문을 취소하였습니다.", sco.getUser().getEmail(), sco.getStore().getStoreNumber());
+        ClosingFood closingFood = closingFoodRepository.findById(sco.getStore().getStoreNumber()).get();
+        closingFood.setQuantity(closingFood.getQuantity() + sco.getQuantity());
+        closingFoodRepository.save(closingFood);
+        return new ClosingOrderDTO(sco.getOrderNumber(), sco.getQuantity(), sco.getTotalPrice(), sco.getOrderDate(), sco.getRequestStatus(), null, "가게측의 사정에 의하여 주문을 취소하였습니다.", null, sco.getStore().getStoreNumber());
     }
 }

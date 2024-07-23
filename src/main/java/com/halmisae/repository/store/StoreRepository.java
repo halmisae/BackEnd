@@ -4,6 +4,7 @@ import com.halmisae.dto.user.StoreReadDetailDTO;
 import com.halmisae.dto.user.StoreReadMainDTO;
 import com.halmisae.dto.user.StoreReadMainRequestDTO;
 import com.halmisae.entity.Store.Store;
+import com.halmisae.entity.Store.StoreHoliday;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
