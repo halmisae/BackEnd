@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReadMonthlyScheduleResponseDTO {
+    private String stringDate;
     private LocalDate date;
     private int reserveCount;
 }

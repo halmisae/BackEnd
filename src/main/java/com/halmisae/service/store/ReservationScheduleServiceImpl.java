@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +34,12 @@ public class ReservationScheduleServiceImpl implements ReservationScheduleServic
     // GET 날짜별 예약 보기
     public List<ReadMonthlyScheduleResponseDTO> readMonthlySchedule(int storeNumber, LocalDateTime today) {
         List<ReadMonthlyScheduleResponseDTO> reserveList = new ArrayList<>();
+
         for (int i = 0; i < 90; i++) {
             int cnt = (reservationRepository.countByVisitTimeAndStoreNumber(storeNumber, today.toLocalDate().atStartOfDay(), today.toLocalDate().atTime(LocalTime.MAX))).intValue();
-            ReadMonthlyScheduleResponseDTO rmsr = new ReadMonthlyScheduleResponseDTO(today.toLocalDate(), cnt);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String formattedDate = today.format(formatter);
+            ReadMonthlyScheduleResponseDTO rmsr = new ReadMonthlyScheduleResponseDTO(formattedDate, today.toLocalDate(), cnt);
             reserveList.add(rmsr);
             today = today.plusDays(1);
         }

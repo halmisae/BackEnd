@@ -1,6 +1,7 @@
 package com.halmisae.repository.user;
 
 import com.halmisae.dto.store.ClosingOrderProcessingReadDTO;
+import com.halmisae.entity.Enum.DoneType;
 import com.halmisae.entity.User.ClosingOrder;
 import com.halmisae.entity.User.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +28,14 @@ public interface ClosingOrderRepository extends JpaRepository<ClosingOrder, Inte
     List<ClosingOrder> findByVisitTimeAndStoreNumber(@Param("storeNumber") int storeNumber,
                                                     @Param("startDate") LocalDateTime startDate,
                                                     @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT co " +
+            "FROM ClosingOrder co " +
+            "WHERE co.store.storeNumber = :storeNumber " +
+            "AND co.orderDate BETWEEN :startDate AND :endDate " +
+            "AND co.sales.doneType IN (:doneTypes)")
+    List<ClosingOrder> findByVisitTimeAndStoreNumberAndDoneType(@Param("storeNumber") int storeNumber,
+                                                     @Param("startDate") LocalDateTime startDate,
+                                                     @Param("endDate") LocalDateTime endDate,
+                                                     @Param("doneTypes") List<DoneType> doneTypes);
 }
