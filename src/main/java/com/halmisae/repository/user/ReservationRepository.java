@@ -1,6 +1,7 @@
 package com.halmisae.repository.user;
 
 import com.halmisae.entity.Enum.DoneType;
+import com.halmisae.entity.Enum.RequestStatus;
 import com.halmisae.entity.User.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,10 +23,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     @Query("SELECT COUNT(r) " +
             "FROM Reservation r " +
             "WHERE r.store.storeNumber = :storeNumber " +
-            "AND r.visitTime BETWEEN :startDate AND :endDate")
-    Long countByVisitTimeAndStoreNumber(@Param("storeNumber") int storeNumber,
-                                        @Param("startDate") LocalDateTime startDate,
-                                        @Param("endDate") LocalDateTime endDate);
+            "AND r.visitTime BETWEEN :startDate AND :endDate " +
+            "AND r.requestStatus = :requestStatus")
+    Long countByVisitTimeAndStoreNumberAndRequestStatus(@Param("storeNumber") int storeNumber,
+                                                        @Param("startDate") LocalDateTime startDate,
+                                                        @Param("endDate") LocalDateTime endDate,
+                                                        @Param("requestStatus") RequestStatus requestStatus);
 
     @Query("SELECT r " +
             "FROM Reservation r " +
@@ -48,8 +51,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     @Query("SELECT r " +
             "FROM Reservation r " +
             "WHERE r.store.storeNumber = :storeNumber " +
-            "AND r.reserveTime BETWEEN :startDate AND :endDate")
-    List<Reservation> findByReserveTimeAndStoreNumber(@Param("storeNumber") int storeNumber,
+            "AND r.reserveTime BETWEEN :startDate AND :endDate " +
+            "OR r.visitTime BETWEEN :startDate AND :endDate")
+    List<Reservation> findByReserveTimeAndStoreNumberAndVisitTime(@Param("storeNumber") int storeNumber,
                                                     @Param("startDate") LocalDateTime startDate,
                                                     @Param("endDate") LocalDateTime endDate);
 }

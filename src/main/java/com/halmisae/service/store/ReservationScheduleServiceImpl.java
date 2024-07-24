@@ -35,7 +35,7 @@ public class ReservationScheduleServiceImpl implements ReservationScheduleServic
         List<ReadMonthlyScheduleResponseDTO> reserveList = new ArrayList<>();
 
         for (int i = 0; i < 90; i++) {
-            int cnt = (reservationRepository.countByVisitTimeAndStoreNumber(storeNumber, today.toLocalDate().atStartOfDay(), today.toLocalDate().atTime(LocalTime.MAX))).intValue();
+            int cnt = (reservationRepository.countByVisitTimeAndStoreNumberAndRequestStatus(storeNumber, today.toLocalDate().atStartOfDay(), today.toLocalDate().atTime(LocalTime.MAX), RequestStatus.ACCEPT)).intValue();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String formattedDate = today.format(formatter);
             ReadMonthlyScheduleResponseDTO rmsr = new ReadMonthlyScheduleResponseDTO(formattedDate, today.toLocalDate(), cnt);
@@ -55,17 +55,19 @@ public class ReservationScheduleServiceImpl implements ReservationScheduleServic
 
         List<Reservation> reservations = reservationRepository.findByVisitTimeAndStoreNumber(storeNumber, day.toLocalDate().atStartOfDay(), day.toLocalDate().atTime(LocalTime.MAX));
         for (Reservation r : reservations) {
-            List<ReserveMenuResponseDTO> reserveMenu = new ArrayList<>();
-            List<MenuDTO> menu = new ArrayList<>();
-            for (ReserveMenu rm : r.getReserveMenu()) {
-                ReserveMenuResponseDTO rmr = new ReserveMenuResponseDTO(rm.getReservation().getReserveNumber(), rm.getMenu().getMenuNumber(), rm.getQuantity());
-                reserveMenu.add(rmr);
-                Menu gm = rm.getMenu();
-                MenuDTO m = new MenuDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
-                menu.add(m);
+            if (r.getRequestStatus() == RequestStatus.ACCEPT) {
+                List<ReserveMenuResponseDTO> reserveMenu = new ArrayList<>();
+                List<MenuDTO> menu = new ArrayList<>();
+                for (ReserveMenu rm : r.getReserveMenu()) {
+                    ReserveMenuResponseDTO rmr = new ReserveMenuResponseDTO(rm.getReservation().getReserveNumber(), rm.getMenu().getMenuNumber(), rm.getQuantity());
+                    reserveMenu.add(rmr);
+                    Menu gm = rm.getMenu();
+                    MenuDTO m = new MenuDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
+                    menu.add(m);
+                }
+                ReservationDTO rd = new ReservationDTO(r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, null, r.getStore().getStoreNumber(), reserveMenu, menu);
+                reserveList.add(rd);
             }
-            ReservationDTO rd = new ReservationDTO(r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, null, r.getStore().getStoreNumber(), reserveMenu, menu);
-            reserveList.add(rd);
         }
         return reserveList;
     }
