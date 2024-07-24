@@ -24,5 +24,5 @@ public class ReservationProcessingReadDTO {
     private RequestStatus requestStatus;
     private String email;
     private int storeNumber;
-    private List<ReserveMenuCreateDTO> reserveMenuCreateDTOS;
+    private List<MenuDTO> menuDTO;
 }

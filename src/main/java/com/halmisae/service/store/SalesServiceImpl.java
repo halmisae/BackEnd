@@ -1,12 +1,16 @@
 package com.halmisae.service.store;
 
 import com.halmisae.dto.store.ClosingOrderProcessingReadDTO;
+import com.halmisae.dto.store.MenuDTO;
 import com.halmisae.dto.store.ReservationProcessingReadDTO;
 import com.halmisae.dto.user.ReserveMenuCreateDTO;
+import com.halmisae.dto.user.ReserveMenuResponseDTO;
 import com.halmisae.entity.Enum.DoneType;
 import com.halmisae.entity.Enum.OrderType;
+import com.halmisae.entity.Store.Menu;
 import com.halmisae.entity.User.ClosingOrder;
 import com.halmisae.entity.User.Reservation;
+import com.halmisae.entity.User.ReserveMenu;
 import com.halmisae.repository.store.SalesRepository;
 import com.halmisae.repository.user.ClosingOrderRepository;
 import com.halmisae.repository.user.ReservationRepository;
@@ -45,8 +49,13 @@ public class SalesServiceImpl implements SalesService{
         List<ClosingOrder> closingOrders = closingOrderRepository.findByVisitTimeAndStoreNumberAndDoneType(storeNumber, ym.atDay(1).atStartOfDay(), ym.atEndOfMonth().atTime(LocalTime.MAX), doneTypes);
         List<Reservation> reservations = reservationRepository.findByVisitTimeAndStoreNumberAndDoneType(storeNumber, ym.atDay(1).atStartOfDay(), ym.atEndOfMonth().atTime(LocalTime.MAX), doneTypes);
         for (Reservation r : reservations) {
-            List<ReserveMenuCreateDTO> reserveMenus = reserveMenuRepository.findAllByReserveNumber(r.getReserveNumber());
-            ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, r.getStore().getStoreNumber(), reserveMenus);
+            List<MenuDTO> menu = new ArrayList<>();
+            for (ReserveMenu rm : r.getReserveMenu()) {
+                Menu gm = rm.getMenu();
+                MenuDTO md = new MenuDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
+                menu.add(md);
+            }
+            ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, r.getStore().getStoreNumber(), menu);
             monthlySales.add(rpr);
         }
         for (ClosingOrder co : closingOrders) {
