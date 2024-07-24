@@ -27,8 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationScheduleServiceImpl implements ReservationScheduleService {
     private final ReservationRepository reservationRepository;
-    private final ClosingOrderRepository closingOrderRepository;
-    private final ClosingFoodRepository closingFoodRepository;
 
     @Override
     // GET 날짜별 예약 보기
@@ -84,18 +82,5 @@ public class ReservationScheduleServiceImpl implements ReservationScheduleServic
             menu.add(m);
         }
         return new ReservationDTO(sr.getReserveTime(), sr.getVisitTime(), sr.getUseTime(), sr.getPeople(), sr.getTotalPrice(), sr.getOrderType(), sr.getRequestStatus(), "가게측의 사정에 의하여 예약을 취소했습니다.", null, sr.getStore().getStoreNumber(), reserveMenu, menu);
-    }
-
-    @Override
-    // PUT 마감할인상품 주문 취소하기
-    public ClosingOrderDTO deleteClosingOrder(int orderNumber) {
-        // Accept 만 취소하기로 변경
-        ClosingOrder closingOrder = closingOrderRepository.findById(orderNumber).get();
-        closingOrder.setRequestStatus(RequestStatus.REJECT);
-        ClosingOrder sco = closingOrderRepository.save(closingOrder);
-        ClosingFood closingFood = closingFoodRepository.findById(sco.getStore().getStoreNumber()).get();
-        closingFood.setQuantity(closingFood.getQuantity() + sco.getQuantity());
-        closingFoodRepository.save(closingFood);
-        return new ClosingOrderDTO(sco.getOrderNumber(), sco.getQuantity(), sco.getTotalPrice(), sco.getOrderDate(), sco.getRequestStatus(), null, "가게측의 사정에 의하여 주문을 취소하였습니다.", null, sco.getStore().getStoreNumber());
     }
 }

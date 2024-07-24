@@ -6,7 +6,6 @@ import com.halmisae.entity.Enum.Status;
 import com.halmisae.entity.User.*;
 import com.halmisae.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService/*, UserDetailsService */{
     private final UserRepository userRepository;
 
     @Override
@@ -29,7 +28,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = new User(uc.getEmail(), uc.getId(), uc.getPassword(), uc.getUserName(), uc.getNickname(), uc.getPhone(), uc.getAddress(), 0, Status.AVAILABLE, 0, LocalDateTime.now(), favorite, rating, closingOrder, reservation);
         User s = userRepository.save(user);
         boolean result = !(s.getEmail().isEmpty());
-        return new UserCreateResponseDTO(result, s.getUsername(), s.getNickname(), s.getPhone(), s.getAddress());
+        return new UserCreateResponseDTO(result, s.getUserName(), s.getNickname(), s.getPhone(), s.getAddress());
     }
 
     @Override

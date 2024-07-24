@@ -28,4 +28,6 @@ public interface ProcessingService {
     ClosingOrderDTO closingOrderDone(int orderNumber);
     // POST 마감할인상품 노쇼;
     ClosingOrderDTO closingOrderNoShow(int orderNumber);
+    // PUT 마감할인상품 주문 취소하기
+    ClosingOrderDTO deleteClosingOrder(int orderNumber);
 }

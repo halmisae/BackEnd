@@ -71,14 +71,19 @@ public class StoreController {
         return processingService.reservationNoShow(reserveNumber);
     }
     @PostMapping("/processing/closingOrder/complete")
-    @Operation(summary = "마감할인상품 완료", description = "가게의 처리중 화면에서 진행중인 마감할인상품을 완료한다.")
+    @Operation(summary = "진행중 마감할인상품 완료", description = "가게의 처리중 화면에서 진행중인 마감할인상품을 완료한다.")
     public ClosingOrderDTO closingOrderDone(@RequestParam("orderNumber") int orderNumber) {
         return processingService.closingOrderDone(orderNumber);
     }
     @PostMapping("/processing/closingOrder/noShow")
-    @Operation(summary = "마감할인상품 노쇼", description = "가게의 처리중 화면에서 진행중인 마감할인상품을 노쇼 등록한다.")
+    @Operation(summary = "진행중 마감할인상품 노쇼", description = "가게의 처리중 화면에서 진행중인 마감할인상품을 노쇼 등록한다.")
     public ClosingOrderDTO closingOrderNoShow(@RequestParam("orderNumber") int orderNumber) {
         return processingService.closingOrderNoShow(orderNumber);
+    }
+    @PutMapping("/processing/closingOrder/cancel")
+    @Operation(summary = "진행중 마감할인상품 주문 취소하기", description = "가게의 처리중 화면에서 진행중인 마감할인상품을 취소한다.")
+    public ClosingOrderDTO deleteClosingOrder(@RequestParam("orderNumber") int orderNumber) {
+        return processingService.deleteClosingOrder(orderNumber);
     }
 
     // ReservationScheduleService : 가게 예약 현황 페이지
@@ -98,11 +103,6 @@ public class StoreController {
     @Operation(summary = "예약 취소하기", description = "가게의 해당 예약을 취소한다.")
     public ReservationDTO deleteReservation(@RequestParam("reserveNumber") int reserveNumber) {
         return reservationScheduleService.deleteReservation(reserveNumber);
-    }
-    @PutMapping("/schedule/daily/closingOrder/cancel")
-    @Operation(summary = "마감할인상품 주문 취소하기", description = "가게의 해당 마감할인 주문 취소한다.")
-    public ClosingOrderDTO deleteClosingOrder(@RequestParam("orderNumber") int orderNumber) {
-        return reservationScheduleService.deleteClosingOrder(orderNumber);
     }
 
     // SalesService : 매출 조회 페이지

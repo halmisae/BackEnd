@@ -8,13 +8,11 @@ import com.halmisae.dto.user.ReserveMenuResponseDTO;
 import com.halmisae.entity.Enum.DoneType;
 import com.halmisae.entity.Enum.OrderType;
 import com.halmisae.entity.Enum.RequestStatus;
-import com.halmisae.entity.Store.Menu;
-import com.halmisae.entity.Store.NoShowFood;
-import com.halmisae.entity.Store.NoShowFoodID;
-import com.halmisae.entity.Store.Sales;
+import com.halmisae.entity.Store.*;
 import com.halmisae.entity.User.ClosingOrder;
 import com.halmisae.entity.User.Reservation;
 import com.halmisae.entity.User.ReserveMenu;
+import com.halmisae.repository.store.ClosingFoodRepository;
 import com.halmisae.repository.store.MenuRepository;
 import com.halmisae.repository.store.NoShowFoodRepository;
 import com.halmisae.repository.store.SalesRepository;
@@ -48,6 +46,7 @@ public class ProcessingServiceImpl implements ProcessingService {
     private final MenuRepository menuRepository;
     private final SalesRepository salesRepository;
     private final NoShowFoodRepository noShowFoodRepository;
+    private final ClosingFoodRepository closingFoodRepository;
 
     // SalesRepository 키 값 AUTO_INCREMENT 중복 처리 코드
 //    @PersistenceContext
@@ -248,5 +247,18 @@ public class ProcessingServiceImpl implements ProcessingService {
         closingOrder.setRequestStatus(RequestStatus.NOT_YET);
         closingOrderRepository.save(closingOrder);
         return new ClosingOrderDTO(closingOrder.getOrderNumber(), closingOrder.getQuantity(), closingOrder.getTotalPrice(), closingOrder.getOrderDate(), closingOrder.getRequestStatus(), DoneType.NO_SHOW, null, null, closingOrder.getStore().getStoreNumber());
+    }
+
+    @Override
+    // PUT 마감할인상품 주문 취소하기
+    public ClosingOrderDTO deleteClosingOrder(int orderNumber) {
+        // Accept 만 취소하기로 변경
+        ClosingOrder closingOrder = closingOrderRepository.findById(orderNumber).get();
+        closingOrder.setRequestStatus(RequestStatus.REJECT);
+        ClosingOrder sco = closingOrderRepository.save(closingOrder);
+        ClosingFood closingFood = closingFoodRepository.findById(sco.getStore().getStoreNumber()).get();
+        closingFood.setQuantity(closingFood.getQuantity() + sco.getQuantity());
+        closingFoodRepository.save(closingFood);
+        return new ClosingOrderDTO(sco.getOrderNumber(), sco.getQuantity(), sco.getTotalPrice(), sco.getOrderDate(), sco.getRequestStatus(), null, "가게측의 사정에 의하여 주문을 취소하였습니다.", null, sco.getStore().getStoreNumber());
     }
 }

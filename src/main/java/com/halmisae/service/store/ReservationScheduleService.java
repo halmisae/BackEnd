@@ -14,6 +14,4 @@ public interface ReservationScheduleService {
     List<ReservationDTO> readDailySchedule(int storeNumber, LocalDateTime day);
     // PUT 예약 취소하기
     ReservationDTO deleteReservation(int reserveNumber);
-    // PUT 마감할인상품 주문 취소하기
-    ClosingOrderDTO deleteClosingOrder(int orderNumber);
 }

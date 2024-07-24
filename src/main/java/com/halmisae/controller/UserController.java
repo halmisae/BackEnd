@@ -7,10 +7,9 @@ import com.halmisae.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -22,10 +21,16 @@ public class UserController {
     private final MainService mainService;
     private final ReservationService reservationService;
 
+//    @GetMapping("/logout")
+//    public String logout(HttpServletRequest request, HttpServletResponse response) {
+//        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+//        return "redirect:/login";
+//    }
+
     // UserService : 회원가입
     @PostMapping()
     @Operation(summary = "고객 회원가입", description = "고객 회원가입")
-    public UserCreateResponseDTO readDailySchedule(@RequestBody UserCreateRequestDTO userCreateRequestDTO) {
+    public UserCreateResponseDTO createUser(@RequestBody UserCreateRequestDTO userCreateRequestDTO) {
         return userService.createUser(userCreateRequestDTO);
     }
 
