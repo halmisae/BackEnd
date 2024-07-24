@@ -96,8 +96,8 @@ public class StoreController {
     @GetMapping("/schedule/daily")
     @Operation(summary = "해당 날짜의 예약 보기", description = "달력에서 날짜를 선택하여 해당 날짜의 예약 목록을 보여준다.")
     public List<ReservationDTO> readDailySchedule(@RequestParam int storeNumber,
-                                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime day) {
-        return reservationScheduleService.readDailySchedule(storeNumber, day);
+                                                  @RequestParam String date) {
+        return reservationScheduleService.readDailySchedule(storeNumber, date);
     }
     @PutMapping("/schedule/daily/reservation/cancel")
     @Operation(summary = "예약 취소하기", description = "가게의 해당 예약을 취소한다.")

@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -46,8 +47,11 @@ public class ReservationScheduleServiceImpl implements ReservationScheduleServic
 
     @Override
     // GET 해당 날짜의 예약 보기
-    public List<ReservationDTO> readDailySchedule(int storeNumber, LocalDateTime day) {
+    public List<ReservationDTO> readDailySchedule(int storeNumber, String date) {
         List<ReservationDTO> reserveList = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(date, formatter);
+        LocalDateTime day = localDate.atStartOfDay();
 
         List<Reservation> reservations = reservationRepository.findByVisitTimeAndStoreNumber(storeNumber, day.toLocalDate().atStartOfDay(), day.toLocalDate().atTime(LocalTime.MAX));
         for (Reservation r : reservations) {

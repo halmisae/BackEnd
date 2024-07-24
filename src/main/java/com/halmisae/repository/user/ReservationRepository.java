@@ -44,4 +44,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
                                                     @Param("startDate") LocalDateTime startDate,
                                                     @Param("endDate") LocalDateTime endDate,
                                                                @Param("doneTypes") List<DoneType> doneTypes);
+
+    @Query("SELECT r " +
+            "FROM Reservation r " +
+            "WHERE r.store.storeNumber = :storeNumber " +
+            "AND r.reserveTime BETWEEN :startDate AND :endDate")
+    List<Reservation> findByReserveTimeAndStoreNumber(@Param("storeNumber") int storeNumber,
+                                                    @Param("startDate") LocalDateTime startDate,
+                                                    @Param("endDate") LocalDateTime endDate);
 }

@@ -78,14 +78,20 @@ public class ProcessingServiceImpl implements ProcessingService {
         LocalDate today = LocalDate.now();
         List<ClosingOrder> closingOrders = closingOrderRepository.findByVisitTimeAndStoreNumber(storeNumber, today.atStartOfDay(), today.atTime(LocalTime.MAX));
         List<Reservation> reservations = reservationRepository.findByVisitTimeAndStoreNumber(storeNumber, today.atStartOfDay(), today.atTime(LocalTime.MAX));
+        List<Reservation> newR = reservationRepository.findByReserveTimeAndStoreNumber(storeNumber, today.atStartOfDay(), today.atTime(LocalTime.MAX));
+        for (ClosingOrder co : closingOrders) {
+            ClosingOrderProcessingReadDTO copr = new ClosingOrderProcessingReadDTO(co.getOrderNumber(), co.getQuantity(), co.getTotalPrice(), OrderType.CLOSING_ORDER, co.getOrderDate(), co.getRequestStatus(), null, co.getStore().getStoreNumber());
+            dailySchedule.add(copr);
+        }
         for (Reservation r : reservations) {
             List<ReserveMenuCreateDTO> reserveMenus = reserveMenuRepository.findAllByReserveNumber(r.getReserveNumber());
             ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, r.getStore().getStoreNumber(), reserveMenus);
             dailySchedule.add(rpr);
         }
-        for (ClosingOrder co : closingOrders) {
-            ClosingOrderProcessingReadDTO copr = new ClosingOrderProcessingReadDTO(co.getOrderNumber(), co.getQuantity(), co.getTotalPrice(), OrderType.CLOSING_ORDER, co.getOrderDate(), co.getRequestStatus(), null, co.getStore().getStoreNumber());
-            dailySchedule.add(copr);
+        for (Reservation r : newR) {
+            List<ReserveMenuCreateDTO> reserveMenus = reserveMenuRepository.findAllByReserveNumber(r.getReserveNumber());
+            ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, r.getStore().getStoreNumber(), reserveMenus);
+            dailySchedule.add(rpr);
         }
         return dailySchedule;
     }

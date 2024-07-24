@@ -11,7 +11,7 @@ public interface ReservationScheduleService {
     // GET 날짜별 예약 보기
     List<ReadMonthlyScheduleResponseDTO> readMonthlySchedule(int storeNumber, LocalDateTime today);
     // GET 해당 날짜의 예약 보기
-    List<ReservationDTO> readDailySchedule(int storeNumber, LocalDateTime day);
+    List<ReservationDTO> readDailySchedule(int storeNumber, String date);
     // PUT 예약 취소하기
     ReservationDTO deleteReservation(int reserveNumber);
 }
