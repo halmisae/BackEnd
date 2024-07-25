@@ -19,7 +19,7 @@ public class StoreReadDetailDTO {
     private String closeTime;
     private String breakStart;
     private String breakEnd;
-    private LocalDateTime pickupTime;
+    private String pickupTime;
     private String address;
 //    private Boolean isFavorite;
     private int closingFoodCount;
