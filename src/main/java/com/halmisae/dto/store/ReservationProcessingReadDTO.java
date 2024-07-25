@@ -24,5 +24,5 @@ public class ReservationProcessingReadDTO {
     private RequestStatus requestStatus;
     private String email;
     private int storeNumber;
-    private List<MenuDTO> menuDTO;
+    private List<ProcessingMenuResponseDTO> menuDTO;
 }

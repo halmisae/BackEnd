@@ -83,10 +83,10 @@ public class ProcessingServiceImpl implements ProcessingService {
             dailySchedule.add(copr);
         }
         for (Reservation r : reservations) {
-            List<MenuDTO> menu = new ArrayList<>();
+            List<ProcessingMenuResponseDTO> menu = new ArrayList<>();
             for (ReserveMenu rm : r.getReserveMenu()) {
                 Menu gm = rm.getMenu();
-                MenuDTO m = new MenuDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
+                ProcessingMenuResponseDTO m = new ProcessingMenuResponseDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), rm.getQuantity(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
                 menu.add(m);
             }
             ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, r.getStore().getStoreNumber(), menu);

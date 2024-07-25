@@ -2,6 +2,7 @@ package com.halmisae.service.store;
 
 import com.halmisae.dto.store.ClosingOrderProcessingReadDTO;
 import com.halmisae.dto.store.MenuDTO;
+import com.halmisae.dto.store.ProcessingMenuResponseDTO;
 import com.halmisae.dto.store.ReservationProcessingReadDTO;
 import com.halmisae.dto.user.ReserveMenuCreateDTO;
 import com.halmisae.dto.user.ReserveMenuResponseDTO;
@@ -49,10 +50,10 @@ public class SalesServiceImpl implements SalesService{
         List<ClosingOrder> closingOrders = closingOrderRepository.findByVisitTimeAndStoreNumberAndDoneType(storeNumber, ym.atDay(1).atStartOfDay(), ym.atEndOfMonth().atTime(LocalTime.MAX), doneTypes);
         List<Reservation> reservations = reservationRepository.findByVisitTimeAndStoreNumberAndDoneType(storeNumber, ym.atDay(1).atStartOfDay(), ym.atEndOfMonth().atTime(LocalTime.MAX), doneTypes);
         for (Reservation r : reservations) {
-            List<MenuDTO> menu = new ArrayList<>();
+            List<ProcessingMenuResponseDTO> menu = new ArrayList<>();
             for (ReserveMenu rm : r.getReserveMenu()) {
                 Menu gm = rm.getMenu();
-                MenuDTO md = new MenuDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
+                ProcessingMenuResponseDTO md = new ProcessingMenuResponseDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), rm.getQuantity(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
                 menu.add(md);
             }
             ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, r.getStore().getStoreNumber(), menu);
