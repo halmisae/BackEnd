@@ -23,6 +23,8 @@ public class StoreServiceImpl implements StoreService{
     private final ClosingFoodRepository closingFoodRepository;
     private final StoreHolidayRepository storeHolidayRepository;
 
+    @Override
+    // POST 회원가입
     public StoreCreateResponseDTO createStore(StoreCreateRequestDTO sc) {
         ReservationDiscount reservationDiscount = new ReservationDiscount();
         ClosingDiscount closingDiscount = new ClosingDiscount();
@@ -48,32 +50,62 @@ public class StoreServiceImpl implements StoreService{
         return new StoreCreateResponseDTO(result, s.getName(), s.getPhone(), s.getStoreName(), s.getAddress(), s.getStorePhone());
     }
 
+
     @Override
+    // 마이페이지
+    // POST 마이페이지 비밀번호 입력 (나중에 인증, 인가로 바꾸기)
     public Boolean passwordCheck(StorePasswordCheckDTO spc) {
         return null;
     }
 
     @Override
+    // GET 업주 정보 보기
     public StoreReadOwnerDTO readStoreOwner(int storeNumber) {
         return null;
     }
 
     @Override
+    // PATCH 업주 정보 수정
     public StoreUpdateOwnerDTO updateStoreOwner(StoreUpdateOwnerDTO uo) {
         return null;
     }
 
     @Override
+    // GET 가게 정보 보기
     public StoreDTO readStore(int storeNumber) {
         return null;
     }
 
     @Override
-    public StoreDTO updateStore(StoreDTO us) {
-        return null;
+    // PATCH 가게 정보 수정
+    public StoreDTO updateStore(StoreDTO s) {
+        Store store = storeRepository.findById(s.getStoreNumber()).get();
+        store.setStoreName(s.getStoreName());
+        store.setAddress(s.getAddress());
+        store.setStorePhone(s.getStorePhone());
+        store.setWeekdayOpen(s.getWeekdayOpen());
+        store.setWeekdayClose(s.getWeekdayClose());
+        store.setWeekendOpen(s.getWeekendOpen());
+        store.setWeekendClose(s.getWeekendClose());
+        store.setBreakStart(s.getBreakStart());
+        store.setBreakEnd(s.getBreakEnd());
+        storeHolidayRepository.deleteAllByStoreNumber(store.getStoreNumber());
+        List<StoreHoliday> shl = new ArrayList<>();
+        List<Weekday> wl = new ArrayList<>();
+        for (Weekday w : s.getStoreHoliday()) {
+            StoreHolidayID shid = new StoreHolidayID(s.getStoreNumber(), w);
+            StoreHoliday sh = new StoreHoliday(shid, store);
+            StoreHoliday ssh = storeHolidayRepository.save(sh);
+            shl.add(ssh);
+            wl.add(w);
+        }
+        store.setStoreHoliday(shl);
+        Store ss = storeRepository.save(store);
+        return new StoreDTO(ss.getStoreNumber(), ss.getStoreName(), ss.getAddress(), ss.getStorePhone(), ss.getWeekdayOpen(), ss.getWeekdayClose(), ss.getWeekendOpen(), ss.getWeekendClose(),ss.getBreakStart(), ss.getBreakEnd(), wl);
     }
 
     @Override
+    // DELETE 회원 탈퇴
     public Boolean deleteStore(int storeNumber) {
         return null;
     }

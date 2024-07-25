@@ -22,11 +22,13 @@ public class MenuServiceImpl implements MenuService {
     private final StoreRepository storeRepository;
 
     @Override
+    // GET 메뉴 목록 보기
     public List<MenuDTO> readMenuList(int storeNumber) {
         return menuRepository.findAllByStoreNumber(storeNumber);
     }
 
     @Override
+    // POST 메뉴 추가하기
     public MenuDTO createMenu(MenuCreateRequestDTO mcr) {
         Store store = storeRepository.findById(mcr.getStoreNumber()).get();
         Menu menu = new Menu(0, mcr.getMenuName(), mcr.getPrice(), mcr.getIntroduction(), mcr.getImage(), 0 ,LocalDateTime.now(), store, new ArrayList<>());
@@ -35,6 +37,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    // PATCH 메뉴 수정하기
     public MenuDTO updateMenu(MenuDTO m) {
         Menu menu = menuRepository.findById(m.getMenuNumber()).get();
         menu.setMenuName(m.getMenuName());
@@ -46,6 +49,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    // DELETE 메뉴 삭제하기
     public boolean deleteMenu(int menuNumber) {
         Menu menu = menuRepository.findById(menuNumber).get();
         menuRepository.delete(menu);

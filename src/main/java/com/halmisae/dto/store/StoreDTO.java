@@ -1,11 +1,15 @@
 package com.halmisae.dto.store;
 
 import com.halmisae.entity.Enum.Weekday;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class StoreDTO {
     private int storeNumber;
     private String storeName;

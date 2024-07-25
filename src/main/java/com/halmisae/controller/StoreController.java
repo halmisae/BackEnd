@@ -113,6 +113,15 @@ public class StoreController {
         return salesService.readSales(storeNumber, month);
     }
 
+    // StoreService : 가게 설정 페이지 - 가게 정보 수정
+    @PatchMapping("/information")
+    @Operation(summary = "가게 정보 수정", description = "가게의 상호명, 주소, 전화번호, 영업 시간, 휴게 시간, 휴무일을 수정 및 등록한다.")
+    // PATCH 가게 정보 수정
+    public StoreDTO updateStore(StoreDTO s) {
+        return storeService.updateStore(s);
+    }
+
+
     // MenuService : 가게 설정 페이지 - my 매장 관리 - 메뉴 관리
     @GetMapping("/menuList")
     @Operation(summary = "메뉴 목록 보기", description = "내 가게의 메뉴 목록을 보여준다.")
