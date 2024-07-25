@@ -101,6 +101,11 @@ public class ProcessingServiceImpl implements ProcessingService {
         ClosingOrder closingOrder = closingOrderRepository.findById(orderNumber).get();
         closingOrder.setRequestStatus(RequestStatus.ACCEPT);
         ClosingOrder sco = closingOrderRepository.save(closingOrder);
+//        Sales sales = new Sales(0, sco.getTotalPrice(), null, OrderType.CLOSING_ORDER, DoneType.NOT_YET, sco, null, sco.getStore());
+//        salesRepository.save(sales);
+//        sco.setSales(sales);
+//        ClosingOrder ssco = closingOrderRepository.save(sco);
+//        return new ClosingOrderDTO(ssco.getOrderNumber(), ssco.getQuantity(), ssco.getTotalPrice(), ssco.getOrderDate(), ssco.getRequestStatus(), DoneType.NOT_YET, null, null, ssco.getStore().getStoreNumber());
         return new ClosingOrderDTO(sco.getOrderNumber(), sco.getQuantity(), sco.getTotalPrice(), sco.getOrderDate(), sco.getRequestStatus(), DoneType.NOT_YET, null, null, sco.getStore().getStoreNumber());
     }
 
@@ -124,14 +129,15 @@ public class ProcessingServiceImpl implements ProcessingService {
             Reservation sr = reservationRepository.save(r);
             List<ReserveMenuResponseDTO> rmList = new ArrayList<>();
             List<MenuDTO> mList = new ArrayList<>();
-            for (ReserveMenu rm : r.getReserveMenu()) {
-                ReserveMenuResponseDTO rmr = new ReserveMenuResponseDTO(r.getReserveNumber(), rm.getMenu().getMenuNumber(), rm.getQuantity());
+            for (ReserveMenu rm : sr.getReserveMenu()) {
+                ReserveMenuResponseDTO rmr = new ReserveMenuResponseDTO(sr.getReserveNumber(), rm.getMenu().getMenuNumber(), rm.getQuantity());
                 rmList.add(rmr);
                 Menu menu = menuRepository.findById(rmr.getMenuNumber()).get();
                 MenuDTO m = new MenuDTO(menu.getMenuNumber(), menu.getMenuName(), menu.getPrice(), menu.getIntroduction(), menu.getImage(), menu.getStore().getStoreNumber());
                 mList.add(m);
             }
-            return new ReservationDTO(r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, null, r.getStore().getStoreNumber(), rmList, mList);
+
+            return new ReservationDTO(sr.getReserveTime(), sr.getVisitTime(), sr.getUseTime(), sr.getPeople(), sr.getTotalPrice(), sr.getOrderType(), sr.getRequestStatus(), null, null, sr.getStore().getStoreNumber(), rmList, mList);
         } else {
             // 노쇼 예약일 경우
 //            List<ReserveMenu> originalrmList = r.getReserveMenu();
@@ -221,9 +227,11 @@ public class ProcessingServiceImpl implements ProcessingService {
         // 노쇼 상품에 추가
         NoShowFood noShowFood = new NoShowFood(LocalDateTime.now(), new NoShowFoodID(reservation.getStore().getStoreNumber(), reserveNumber), reservation.getStore(), reservation);
         noShowFoodRepository.save(noShowFood);
-        // 예약 내역의 요청 상태 노쇼로 바꾸기
-        reservation.setRequestStatus(RequestStatus.NOT_YET);
-        reservationRepository.save(reservation);
+//        // 예약 내역의 요청 상태 노쇼로 바꾸기
+//        reservation.setRequestStatus(RequestStatus.NOT_YET);
+//        reservationRepository.save(reservation);
+        // 예약 내역 삭제하기
+        reservationRepository.deleteById(reserveNumber);
         return new ReservationNoShowResponseDTO(reservation.getReserveTime(), reservation.getVisitTime(), reservation.getUseTime(), reservation.getPeople(), reservation.getTotalPrice(), reservation.getOrderType(), reservation.getRequestStatus(), DoneType.NO_SHOW, null, reservation.getStore().getStoreNumber(), rmList, mList);
     }
 
@@ -247,10 +255,11 @@ public class ProcessingServiceImpl implements ProcessingService {
 //        Sales sales = new Sales(0, closingOrder.getTotalPrice(), LocalDateTime.now(), OrderType.CLOSING_ORDER, DoneType.NO_SHOW, closingOrder, null, closingOrder.getStore());
 //        salesRepository.save(sales);
         // 마감할인상품 개수 더하기
-        int originalQuantity = closingOrder.getStore().getClosingFood().getQuantity();
-        closingOrder.getStore().getClosingFood().setQuantity(originalQuantity + closingOrder.getQuantity());
-        closingOrder.setRequestStatus(RequestStatus.NOT_YET);
-        closingOrderRepository.save(closingOrder);
+        ClosingFood closingFood = closingOrder.getStore().getClosingFood();
+        int originalQuantity = closingFood.getQuantity();
+        closingFood.setQuantity(originalQuantity + closingOrder.getQuantity());
+        closingFoodRepository.save(closingFood);
+        closingOrderRepository.deleteById(orderNumber);
         return new ClosingOrderDTO(closingOrder.getOrderNumber(), closingOrder.getQuantity(), closingOrder.getTotalPrice(), closingOrder.getOrderDate(), closingOrder.getRequestStatus(), DoneType.NO_SHOW, null, null, closingOrder.getStore().getStoreNumber());
     }
 
