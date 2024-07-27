@@ -5,6 +5,7 @@ import com.halmisae.dto.user.*;
 import com.halmisae.entity.Enum.RequestStatus;
 import com.halmisae.entity.Enum.Weekday;
 import com.halmisae.entity.Store.Menu;
+import com.halmisae.entity.Store.ReservationDiscount;
 import com.halmisae.entity.Store.Store;
 import com.halmisae.entity.Store.StoreHoliday;
 import com.halmisae.entity.User.Reservation;
@@ -43,7 +44,12 @@ public class ReservationServiceImpl implements ReservationService {
         List<Weekday> shl = new ArrayList<>();
         for (StoreHoliday sh : shList) shl.add(sh.getId().getDayOfWeek());
         List<MenuDTO> ml = menuRepository.findAllByStoreNumber(storeNumber);
-        return new ReservationReadDetailDTO(storeNumber, shl, store.getReservationDiscount().getUsageTime(), ml);
+        ReservationDiscount reservationDiscount = store.getReservationDiscount();
+        int usageTime = reservationDiscount.getUsageTime();
+        int unitTime = reservationDiscount.getUnitTime();
+        int discount = reservationDiscount.getDiscount();
+        int preorderDiscount = reservationDiscount.getPreorderDiscount();
+        return new ReservationReadDetailDTO(storeNumber, shl, usageTime, unitTime, discount, preorderDiscount, ml);
     }
 
     @Override

@@ -17,5 +17,8 @@ public class ReservationReadDetailDTO {
     private int storeNumber;
     private List<Weekday> storeHoliday;
     private int usageTime;
+    private int unitTime;
+    private int discount;
+    private int preorderDiscount;
     private List<MenuDTO> menu;
 }
