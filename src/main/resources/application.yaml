@@ -32,6 +32,20 @@ server:
     whitelabel:
       enabled: true
 
+# s3 setting
+cloud:
+  aws:
+    credentials:
+      access-key: AKIA2UC3CMQGZLFAI3FX
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: halmisae-final
+    stack:
+      auto: false
+
+
 ## JWT TokenProvider
 #jwt:
 #  issuer: tmddn1679@naver.com
