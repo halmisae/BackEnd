@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -130,12 +131,12 @@ public class StoreController {
     }
     @PostMapping("/menuList/menu")
     @Operation(summary = "메뉴 등록", description = "내 가게에 메뉴를 등록한다.")
-    public MenuDTO createMenu(@RequestBody MenuCreateRequestDTO mcr) {
+    public MenuDTO createMenu(@RequestBody MenuCreateRequestDTO mcr) throws IOException {
         return menuService.createMenu(mcr);
     }
     @PatchMapping("/menuList/menu")
     @Operation(summary = "메뉴 수정", description = "내 가게의 메뉴를 수정한다.")
-    public MenuDTO updateMenu(@RequestBody MenuDTO m) {
+    public MenuDTO updateMenu(@RequestBody MenuUpdateDTO m) throws IOException {
         return menuService.updateMenu(m);
     }
     @DeleteMapping("/menuList/menu")

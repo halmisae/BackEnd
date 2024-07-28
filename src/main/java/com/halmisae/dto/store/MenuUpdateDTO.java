@@ -8,11 +8,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuCreateRequestDTO {
-    private int storeNumber;
+public class MenuUpdateDTO {
+    private int menuNumber;
     private String menuName;
     private int price;
     private String introduction;
     private MultipartFile image;
-//    private String image;
+    private int storeNumber;
 }
