@@ -5,10 +5,12 @@ import com.halmisae.entity.Enum.Status;
 import com.halmisae.entity.Enum.Weekday;
 import com.halmisae.entity.Store.*;
 import com.halmisae.repository.store.*;
+import com.halmisae.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class StoreServiceImpl implements StoreService{
     private final ClosingDiscountRepository closingDiscountRepository;
     private final ClosingFoodRepository closingFoodRepository;
     private final StoreHolidayRepository storeHolidayRepository;
+    private final S3Uploader s3Uploader;
 
     @Override
     // POST 회원가입
@@ -78,11 +81,13 @@ public class StoreServiceImpl implements StoreService{
 
     @Override
     // PATCH 가게 정보 수정
-    public StoreDTO updateStore(StoreDTO s) {
+    public StoreDTO updateStore(StoreUpdateDTO s) throws IOException {
         Store store = storeRepository.findById(s.getStoreNumber()).get();
         store.setStoreName(s.getStoreName());
         store.setAddress(s.getAddress());
         store.setStorePhone(s.getStorePhone());
+        String updatedImage = s3Uploader.upload(s.getImage(), "storeImage");
+        store.setImage(updatedImage);
         store.setWeekdayOpen(s.getWeekdayOpen());
         store.setWeekdayClose(s.getWeekdayClose());
         store.setWeekendOpen(s.getWeekendOpen());

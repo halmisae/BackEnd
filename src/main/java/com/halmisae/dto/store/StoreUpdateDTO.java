@@ -11,11 +11,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreDTO {
+public class StoreUpdateDTO {
     private int storeNumber;
     private String storeName;
     private String address;
     private String storePhone;
+    private MultipartFile image;
     private String weekdayOpen;
     private String weekdayClose;
     private String weekendOpen;

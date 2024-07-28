@@ -35,7 +35,7 @@ public class MenuServiceImpl implements MenuService {
     // POST 메뉴 추가하기
     public MenuDTO createMenu(MenuCreateRequestDTO mcr) throws IOException {
         Store store = storeRepository.findById(mcr.getStoreNumber()).get();
-        String image = s3Uploader.upload(mcr.getImage(), "image");
+        String image = s3Uploader.upload(mcr.getImage(), "menuImage");
         Menu menu = new Menu(0, mcr.getMenuName(), mcr.getPrice(), mcr.getIntroduction(), image, 0 ,LocalDateTime.now(), store, new ArrayList<>());
         Menu m = menuRepository.save(menu);
         return new MenuDTO(m.getMenuNumber(), m.getMenuName(), m.getPrice(), m.getIntroduction(), m.getImage(), m.getStore().getStoreNumber());
@@ -48,7 +48,7 @@ public class MenuServiceImpl implements MenuService {
         menu.setMenuName(m.getMenuName());
         menu.setPrice(m.getPrice());
         menu.setIntroduction(m.getIntroduction());
-        String updatedImage = s3Uploader.updateFile(m.getImage(), menu.getImage(), "image");
+        String updatedImage = s3Uploader.updateFile(m.getImage(), menu.getImage(), "menuImage");
         menu.setImage(updatedImage);
         Menu sm = menuRepository.save(menu);
         return new MenuDTO(sm.getMenuNumber(), sm.getMenuName(), sm.getPrice(), sm.getIntroduction(), sm.getImage(), sm.getStore().getStoreNumber());
