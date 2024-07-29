@@ -137,6 +137,18 @@ public class StoreController {
     @PatchMapping("/menuList/menu")
     @Operation(summary = "메뉴 수정", description = "내 가게의 메뉴를 수정한다.")
     public MenuDTO updateMenu(@ModelAttribute MenuUpdateDTO m) throws IOException {
+//        // 파일 처리 로직
+//        if (m.getImage().isEmpty()) {
+//            return "파일이 비어 있습니다.";
+//        }
+//
+//        // 파일 이름 및 크기 등 정보 가져오기
+//        String fileName = m.getImage().getOriginalFilename();
+//        long fileSize = m.getImage().getSize();
+//
+//        // 파일 저장 등의 로직 추가
+//
+//        return "파일 업로드 성공: " + fileName + " (크기: " + fileSize + " 바이트)";
         return menuService.updateMenu(m);
     }
     @DeleteMapping("/menuList/menu")

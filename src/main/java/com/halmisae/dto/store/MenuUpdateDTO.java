@@ -9,10 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MenuUpdateDTO {
+    private int storeNumber;
     private int menuNumber;
     private String menuName;
-    private int price;
     private String introduction;
+    private int price;
     private MultipartFile image;
-    private int storeNumber;
 }
