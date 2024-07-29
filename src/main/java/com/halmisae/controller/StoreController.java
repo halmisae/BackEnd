@@ -115,10 +115,16 @@ public class StoreController {
     }
 
     // StoreService : 가게 설정 페이지 - 가게 정보 수정
-    @PatchMapping("/information")
-    @Operation(summary = "가게 정보 수정", description = "가게의 상호명, 주소, 전화번호, 영업 시간, 휴게 시간, 휴무일을 수정 및 등록한다.")
+    @GetMapping("/information")
+    @Operation(summary = "기존 가게 정보 보기", description = "기존 가게의 상호명, 사진, 주소, 전화번호, 영업 시간, 휴게 시간, 휴무일을 보여준다.")
     // PATCH 가게 정보 수정
-    public StoreDTO updateStore(StoreUpdateDTO s) throws IOException {
+    public StoreDTO readStore(@RequestParam int storeNumber) {
+        return storeService.readStore(storeNumber);
+    }
+    @PatchMapping("/information")
+    @Operation(summary = "가게 정보 수정", description = "가게의 상호명, 사진, 주소, 전화번호, 영업 시간, 휴게 시간, 휴무일을 수정 및 등록한다.")
+    // PATCH 가게 정보 수정
+    public StoreDTO updateStore(@ModelAttribute StoreUpdateDTO s) throws IOException {
         return storeService.updateStore(s);
     }
 
