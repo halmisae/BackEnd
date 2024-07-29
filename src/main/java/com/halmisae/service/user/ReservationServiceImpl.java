@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,20 @@ public class ReservationServiceImpl implements ReservationService {
         int unitTime = reservationDiscount.getUnitTime();
         int discount = reservationDiscount.getDiscount();
         int preorderDiscount = reservationDiscount.getPreorderDiscount();
-        return new ReservationReadDetailDTO(storeNumber, shl, usageTime, unitTime, discount, preorderDiscount, ml);
+        String openTime;
+        String closeTime;
+        int today = LocalDate.now().getDayOfWeek().getValue();
+        if (today < 6) {
+            StoreReadDetailDTO swd = storeRepository.findStoreWeekdayDetail(storeNumber);
+            openTime = swd.getOpenTime();
+            closeTime = swd.getCloseTime();
+        }
+        else {
+            StoreReadDetailDTO swd = storeRepository.findStoreWeekendDetail(storeNumber);
+            openTime = swd.getOpenTime();
+            closeTime = swd.getCloseTime();
+        }
+        return new ReservationReadDetailDTO(storeNumber, shl, usageTime, unitTime, discount, preorderDiscount, ml, openTime, closeTime, store.getBreakStart(), store.getBreakEnd());
     }
 
     @Override

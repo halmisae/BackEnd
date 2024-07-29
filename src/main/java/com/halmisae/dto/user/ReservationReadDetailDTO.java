@@ -21,4 +21,8 @@ public class ReservationReadDetailDTO {
     private int discount;
     private int preorderDiscount;
     private List<MenuDTO> menu;
+    private String openTime;
+    private String closeTime;
+    private String breakStart;
+    private String breakEnd;
 }
