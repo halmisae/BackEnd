@@ -131,12 +131,12 @@ public class StoreController {
     }
     @PostMapping("/menuList/menu")
     @Operation(summary = "메뉴 등록", description = "내 가게에 메뉴를 등록한다.")
-    public MenuDTO createMenu(@RequestBody MenuCreateRequestDTO mcr) throws IOException {
+    public MenuDTO createMenu(@ModelAttribute MenuCreateRequestDTO mcr) throws IOException {
         return menuService.createMenu(mcr);
     }
     @PatchMapping("/menuList/menu")
     @Operation(summary = "메뉴 수정", description = "내 가게의 메뉴를 수정한다.")
-    public MenuDTO updateMenu(@RequestBody MenuUpdateDTO m) throws IOException {
+    public MenuDTO updateMenu(@ModelAttribute MenuUpdateDTO m) throws IOException {
         return menuService.updateMenu(m);
     }
     @DeleteMapping("/menuList/menu")
