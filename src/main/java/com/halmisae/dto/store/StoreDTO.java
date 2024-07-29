@@ -14,6 +14,7 @@ import java.util.List;
 public class StoreDTO {
     private int storeNumber;
     private String storeName;
+    private String image;
     private String address;
     private String storePhone;
     private String weekdayOpen;

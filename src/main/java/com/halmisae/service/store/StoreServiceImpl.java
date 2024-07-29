@@ -61,22 +61,27 @@ public class StoreServiceImpl implements StoreService{
         return null;
     }
 
-    @Override
-    // GET 업주 정보 보기
-    public StoreReadOwnerDTO readStoreOwner(int storeNumber) {
-        return null;
-    }
-
-    @Override
-    // PATCH 업주 정보 수정
-    public StoreUpdateOwnerDTO updateStoreOwner(StoreUpdateOwnerDTO uo) {
-        return null;
-    }
+//    @Override
+//    // GET 업주 정보 보기
+//    public StoreReadOwnerDTO readStoreOwner(int storeNumber) {
+//        return null;
+//    }
+//
+//    @Override
+//    // PATCH 업주 정보 수정
+//    public StoreUpdateOwnerDTO updateStoreOwner(StoreUpdateOwnerDTO uo) {
+//        return null;
+//    }
 
     @Override
     // GET 가게 정보 보기
     public StoreDTO readStore(int storeNumber) {
-        return null;
+        Store s = storeRepository.findById(storeNumber).get();
+        List<StoreHoliday> storeHoliday = s.getStoreHoliday();
+        List<Weekday> wl = new ArrayList<>();
+        for (StoreHoliday holiday : storeHoliday)
+            wl.add(holiday.getId().getDayOfWeek());
+        return new StoreDTO(s.getStoreNumber(), s.getStoreName(), s.getImage(), s.getAddress(), s.getStorePhone(), s.getWeekdayOpen(), s.getWeekdayClose(), s.getWeekendOpen(), s.getWeekendClose(),s.getBreakStart(), s.getBreakEnd(), wl);
     }
 
     @Override
@@ -106,7 +111,7 @@ public class StoreServiceImpl implements StoreService{
         }
         store.setStoreHoliday(shl);
         Store ss = storeRepository.save(store);
-        return new StoreDTO(ss.getStoreNumber(), ss.getStoreName(), ss.getAddress(), ss.getStorePhone(), ss.getWeekdayOpen(), ss.getWeekdayClose(), ss.getWeekendOpen(), ss.getWeekendClose(),ss.getBreakStart(), ss.getBreakEnd(), wl);
+        return new StoreDTO(ss.getStoreNumber(), ss.getStoreName(), ss.getImage(), ss.getAddress(), ss.getStorePhone(), ss.getWeekdayOpen(), ss.getWeekdayClose(), ss.getWeekendOpen(), ss.getWeekendClose(),ss.getBreakStart(), ss.getBreakEnd(), wl);
     }
 
     @Override

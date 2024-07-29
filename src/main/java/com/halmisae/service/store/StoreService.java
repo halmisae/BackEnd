@@ -13,10 +13,10 @@ public interface StoreService {
     // 마이페이지
     // POST 마이페이지 비밀번호 입력 (나중에 인증, 인가로 바꾸기)
     Boolean passwordCheck(StorePasswordCheckDTO spc);
-    // GET 업주 정보 보기
-    StoreReadOwnerDTO readStoreOwner(int storeNumber);
-    // PATCH 업주 정보 수정
-    StoreUpdateOwnerDTO updateStoreOwner(StoreUpdateOwnerDTO uo);
+//    // GET 업주 정보 보기
+//    StoreReadOwnerDTO readStoreOwner(int storeNumber);
+//    // PATCH 업주 정보 수정
+//    StoreUpdateOwnerDTO updateStoreOwner(StoreUpdateOwnerDTO uo);
     // GET 가게 정보 보기
     StoreDTO readStore(int storeNumber);
     // PATCH 가게 정보 수정
