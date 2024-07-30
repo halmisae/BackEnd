@@ -55,7 +55,7 @@ jobs:
           port: 22
           script_stop: true
           script: |
-            ssh -o StrictHostKeyChecking=no -i "${{ secrets.EC2_PRIVATE_KEY }}" ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            ssh - t -o StrictHostKeyChecking=no -i "${{ secrets.EC2_PRIVATE_KEY }}" ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
               docker stop web-server || true
               docker rm web-server || true
               docker pull ${{ steps.login-ecr.outputs.registry }}/web-server:latest
