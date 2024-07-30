@@ -52,14 +52,14 @@ jobs:
           echo "${{ secrets.EC2_PRIVATE_KEY }}" > ec2_key.pem
           chmod 600 bastion_key.pem ec2_key.pem
 
-          ssh -o StrictHostKeyChecking=no -i bastion_key.pem ${{ secrets.BASTION_USERNAME }}@${{ secrets.BASTION_HOST }} << EOF
-            docker stop web-server || true
+          ssh -t -o StrictHostKeyChecking=no -i bastion_key.pem ${{ secrets.BASTION_USERNAME }}@${{ secrets.BASTION_HOST }} << EOF
+            docker stop web-server || rue
             docker rm web-server || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/web-server:latest
             docker run -d --name web-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/web-server:latest
           EOF
 
-          rm bastion_key.pem ec2_key.pem
+          rm bastion_key.pem ec2_key.pemt
 
     env:
       JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.11-9/x64
