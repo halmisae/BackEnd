@@ -202,8 +202,8 @@ public class ProcessingServiceImpl implements ProcessingService {
         }
         // 판매 내역에 추가
         Sales sales = new Sales(0, reservation.getTotalPrice(), now, OrderType.RESERVATION, doneType, null, reservation, reservation.getStore());
-        salesRepository.save(sales);
-        reservation.setSales(sales);
+        Sales savedSales = salesRepository.save(sales);
+        reservation.setSales(savedSales);
         reservationRepository.save(reservation);
         return new ReservationDoneResponseDTO(reservation.getReserveTime(), visitTime, reservation.getUseTime(), reservation.getPeople(), reservation.getTotalPrice(), reservation.getOrderType(), reservation.getRequestStatus(), doneType, null, reservation.getStore().getStoreNumber(), rmList, mList);
     }
