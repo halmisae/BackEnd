@@ -96,7 +96,7 @@ public class StoreController {
     }
     @GetMapping("/schedule/daily")
     @Operation(summary = "해당 날짜의 예약 보기", description = "달력에서 날짜를 선택하여 해당 날짜의 예약 목록을 보여준다.")
-    public List<ReservationDTO> readDailySchedule(@RequestParam int storeNumber,
+    public List<ReservationDailyScheduleDTO> readDailySchedule(@RequestParam int storeNumber,
                                                   @RequestParam String date) {
         return reservationScheduleService.readDailySchedule(storeNumber, date);
     }

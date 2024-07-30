@@ -2,7 +2,9 @@ package com.halmisae.service.store;
 
 import com.halmisae.dto.store.MenuDTO;
 import com.halmisae.dto.store.ReadMonthlyScheduleResponseDTO;
+import com.halmisae.dto.store.ReservationDailyScheduleDTO;
 import com.halmisae.dto.user.*;
+import com.halmisae.entity.Enum.DoneType;
 import com.halmisae.entity.Enum.RequestStatus;
 import com.halmisae.entity.Store.ClosingFood;
 import com.halmisae.entity.Store.Menu;
@@ -47,11 +49,12 @@ public class ReservationScheduleServiceImpl implements ReservationScheduleServic
 
     @Override
     // GET 해당 날짜의 예약 보기
-    public List<ReservationDTO> readDailySchedule(int storeNumber, String date) {
-        List<ReservationDTO> reserveList = new ArrayList<>();
+    public List<ReservationDailyScheduleDTO> readDailySchedule(int storeNumber, String date) {
+        List<ReservationDailyScheduleDTO> reserveList = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
         LocalDateTime day = localDate.atStartOfDay();
+        DoneType doneType;
 
         List<Reservation> reservations = reservationRepository.findByVisitTimeAndStoreNumber(storeNumber, day.toLocalDate().atStartOfDay(), day.toLocalDate().atTime(LocalTime.MAX));
         for (Reservation r : reservations) {
@@ -65,7 +68,11 @@ public class ReservationScheduleServiceImpl implements ReservationScheduleServic
                     MenuDTO m = new MenuDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
                     menu.add(m);
                 }
-                ReservationDTO rd = new ReservationDTO(r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), r.getRequestStatus(), null, null, r.getStore().getStoreNumber(), reserveMenu, menu);
+                if (r.getSales() == null)
+                    doneType = DoneType.NOT_YET;
+                else
+                    doneType = r.getSales().getDoneType();
+                ReservationDailyScheduleDTO rd = new ReservationDailyScheduleDTO(r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getOrderType(), doneType, r.getRequestStatus(), null, null, r.getStore().getStoreNumber(), reserveMenu, menu);
                 reserveList.add(rd);
             }
         }
