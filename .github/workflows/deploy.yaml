@@ -52,7 +52,6 @@ jobs:
           host: ${{ secrets.BASTION_HOST }}
           username: ${{ secrets.BASTION_USERNAME }}
           key: ${{ secrets.BASTION_PRIVATE_KEY }}
-          port: 22
           script_stop: true
           script: |
             docker stop web-server || true
