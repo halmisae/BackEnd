@@ -6,4 +6,5 @@ import lombok.Data;
 public class StoreReadMainRequestDTO {
     private String email;
     private String address;
+    private String addressDetail;
 }

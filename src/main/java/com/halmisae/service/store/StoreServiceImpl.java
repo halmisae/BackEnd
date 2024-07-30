@@ -34,7 +34,7 @@ public class StoreServiceImpl implements StoreService{
         ClosingFood closingFood = new ClosingFood();
 
         List<StoreHoliday> storeHoliday = new ArrayList<>();
-        Store store = new Store(0, sc.getId(), sc.getPassword(), sc.getName(), sc.getPhone(), sc.getBusinessNumber(), sc.getEmail(), sc.getStoreName(), sc.getImage(), sc.getAverageRating(), sc.getAddress(), sc.getStorePhone(), sc.getWeekdayOpen(), sc.getWeekdayClose(), sc.getWeekendOpen(), sc.getWeekendClose(), sc.getBreakStart(), sc.getBreakEnd(), LocalDateTime.now(), Status.AVAILABLE, 0, new ArrayList<>(), storeHoliday, reservationDiscount, new ArrayList<>(), closingDiscount, closingFood, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        Store store = new Store(0, sc.getId(), sc.getPassword(), sc.getName(), sc.getPhone(), sc.getBusinessNumber(), sc.getEmail(), sc.getStoreName(), sc.getImage(), sc.getAverageRating(), sc.getAddress(), sc.getAddressDetail(), sc.getStorePhone(), sc.getWeekdayOpen(), sc.getWeekdayClose(), sc.getWeekendOpen(), sc.getWeekendClose(), sc.getBreakStart(), sc.getBreakEnd(), LocalDateTime.now(), Status.AVAILABLE, 0, new ArrayList<>(), storeHoliday, reservationDiscount, new ArrayList<>(), closingDiscount, closingFood, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         Store savedStore = storeRepository.save(store);
         for (Weekday wd : sc.getStoreHoliday()) {
             StoreHoliday sh = new StoreHoliday(new StoreHolidayID(savedStore.getStoreNumber(), wd), savedStore);
@@ -50,7 +50,7 @@ public class StoreServiceImpl implements StoreService{
         closingFoodRepository.save(closingFood);
         Store s = storeRepository.save(store);
         boolean result = s.getStoreNumber() > -1;
-        return new StoreCreateResponseDTO(result, s.getName(), s.getPhone(), s.getStoreName(), s.getAddress(), s.getStorePhone());
+        return new StoreCreateResponseDTO(result, s.getName(), s.getPhone(), s.getStoreName(), s.getAddress(), s.getAddressDetail(), s.getStorePhone());
     }
 
 
@@ -81,7 +81,7 @@ public class StoreServiceImpl implements StoreService{
         List<Weekday> wl = new ArrayList<>();
         for (StoreHoliday holiday : storeHoliday)
             wl.add(holiday.getId().getDayOfWeek());
-        return new StoreDTO(s.getStoreNumber(), s.getStoreName(), s.getImage(), s.getAddress(), s.getStorePhone(), s.getWeekdayOpen(), s.getWeekdayClose(), s.getWeekendOpen(), s.getWeekendClose(),s.getBreakStart(), s.getBreakEnd(), wl);
+        return new StoreDTO(s.getStoreNumber(), s.getStoreName(), s.getImage(), s.getAddress(), s.getAddressDetail(), s.getStorePhone(), s.getWeekdayOpen(), s.getWeekdayClose(), s.getWeekendOpen(), s.getWeekendClose(),s.getBreakStart(), s.getBreakEnd(), wl);
     }
 
     @Override
@@ -90,6 +90,7 @@ public class StoreServiceImpl implements StoreService{
         Store store = storeRepository.findById(s.getStoreNumber()).get();
         store.setStoreName(s.getStoreName());
         store.setAddress(s.getAddress());
+        store.setAddressDetail(s.getAddressDetail());
         store.setStorePhone(s.getStorePhone());
         String updatedImage = s3Uploader.upload(s.getImage(), "storeImage");
         store.setImage(updatedImage);
@@ -111,7 +112,7 @@ public class StoreServiceImpl implements StoreService{
         }
         store.setStoreHoliday(shl);
         Store ss = storeRepository.save(store);
-        return new StoreDTO(ss.getStoreNumber(), ss.getStoreName(), ss.getImage(), ss.getAddress(), ss.getStorePhone(), ss.getWeekdayOpen(), ss.getWeekdayClose(), ss.getWeekendOpen(), ss.getWeekendClose(),ss.getBreakStart(), ss.getBreakEnd(), wl);
+        return new StoreDTO(ss.getStoreNumber(), ss.getStoreName(), ss.getImage(), ss.getAddress(), ss.getAddressDetail(), ss.getStorePhone(), ss.getWeekdayOpen(), ss.getWeekdayClose(), ss.getWeekendOpen(), ss.getWeekendClose(),ss.getBreakStart(), ss.getBreakEnd(), wl);
     }
 
     @Override

@@ -18,6 +18,7 @@ public class StoreCreateRequestDTO {
     private String image;
     private float averageRating;
     private String address;
+    private String addressDetail;
     private String storePhone;
     private String weekdayOpen;
     private String weekdayClose;

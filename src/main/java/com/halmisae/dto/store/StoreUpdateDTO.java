@@ -15,6 +15,7 @@ public class StoreUpdateDTO {
     private int storeNumber;
     private String storeName;
     private String address;
+    private String addressDetail;
     private String storePhone;
     private MultipartFile image;
     private String weekdayOpen;

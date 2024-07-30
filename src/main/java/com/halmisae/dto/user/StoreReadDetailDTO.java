@@ -21,6 +21,7 @@ public class StoreReadDetailDTO {
     private String breakEnd;
     private String pickupTime;
     private String address;
+    private String addressDetail;
 //    private Boolean isFavorite;
     private int closingFoodCount;
 }

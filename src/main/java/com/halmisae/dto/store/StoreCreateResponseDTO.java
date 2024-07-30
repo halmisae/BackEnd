@@ -15,5 +15,6 @@ public class StoreCreateResponseDTO {
     private String phone;
     private String storeName;
     private String address;
+    private String addressDetail;
     private String storePhone;
 }

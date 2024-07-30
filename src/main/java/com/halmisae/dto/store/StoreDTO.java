@@ -16,6 +16,7 @@ public class StoreDTO {
     private String storeName;
     private String image;
     private String address;
+    private String addressDetail;
     private String storePhone;
     private String weekdayOpen;
     private String weekdayClose;
