@@ -54,8 +54,9 @@ jobs:
           key: ${{ secrets.BASTION_PRIVATE_KEY }}
           script_stop: true
           script: |
-            sudo apt-get update
-            sudo apt-get install awscli
+            curl "https://d1uj6qtbmh3dt5.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscli-exe-linux-x86_64.zip"
+            unzip awscli-exe-linux-x86_64.zip
+            sudo ./aws/install
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
             docker pull ${{ steps.login-ecr.outputs.registry }}/web-server:latest
             docker run -d --name web-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/web-server:latest
