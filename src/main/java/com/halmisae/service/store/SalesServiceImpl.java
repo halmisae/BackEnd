@@ -49,6 +49,7 @@ public class SalesServiceImpl implements SalesService{
         doneTypes.add(DoneType.OVER_TIME);
         List<ClosingOrder> closingOrders = closingOrderRepository.findByVisitTimeAndStoreNumberAndDoneType(storeNumber, ym.atDay(1).atStartOfDay(), ym.atEndOfMonth().atTime(LocalTime.MAX), doneTypes);
         List<Reservation> reservations = reservationRepository.findByVisitTimeAndStoreNumberAndDoneType(storeNumber, ym.atDay(1).atStartOfDay(), ym.atEndOfMonth().atTime(LocalTime.MAX), doneTypes);
+        DoneType doneType;
         for (Reservation r : reservations) {
             List<ProcessingMenuResponseDTO> menu = new ArrayList<>();
             for (ReserveMenu rm : r.getReserveMenu()) {
@@ -56,11 +57,19 @@ public class SalesServiceImpl implements SalesService{
                 ProcessingMenuResponseDTO md = new ProcessingMenuResponseDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), rm.getQuantity(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
                 menu.add(md);
             }
-            ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(),r.getSales().getDoneType(), r.getOrderType(), r.getRequestStatus(), null, r.getStore().getStoreNumber(), menu);
+            if (r.getSales() == null)
+                doneType = DoneType.NOT_YET;
+            else
+                doneType = r.getSales().getDoneType();
+            ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), doneType, r.getOrderType(), r.getRequestStatus(), null, r.getStore().getStoreNumber(), menu);
             monthlySales.add(rpr);
         }
         for (ClosingOrder co : closingOrders) {
-            ClosingOrderProcessingReadDTO copr = new ClosingOrderProcessingReadDTO(co.getOrderNumber(), co.getQuantity(), co.getTotalPrice(), co.getSales().getDoneType(), OrderType.CLOSING_ORDER, co.getOrderDate(), co.getRequestStatus(), null, co.getStore().getStoreNumber());
+            if (co.getSales() == null)
+                doneType = DoneType.NOT_YET;
+            else
+                doneType = co.getSales().getDoneType();
+            ClosingOrderProcessingReadDTO copr = new ClosingOrderProcessingReadDTO(co.getOrderNumber(), co.getQuantity(), co.getTotalPrice(), doneType, OrderType.CLOSING_ORDER, co.getOrderDate(), co.getRequestStatus(), null, co.getStore().getStoreNumber());
             monthlySales.add(copr);
         }
         return monthlySales;

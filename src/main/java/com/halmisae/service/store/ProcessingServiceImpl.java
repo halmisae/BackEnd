@@ -78,6 +78,7 @@ public class ProcessingServiceImpl implements ProcessingService {
         LocalDate today = LocalDate.now();
         List<ClosingOrder> closingOrders = closingOrderRepository.findByVisitTimeAndStoreNumber(storeNumber, today.atStartOfDay(), today.atTime(LocalTime.MAX));
         List<Reservation> reservations = reservationRepository.findByReserveTimeAndStoreNumberAndVisitTime(storeNumber, today.atStartOfDay(), today.atTime(LocalTime.MAX));
+        DoneType doneType;
         for (ClosingOrder co : closingOrders) {
             ClosingOrderProcessingReadDTO copr = new ClosingOrderProcessingReadDTO(co.getOrderNumber(), co.getQuantity(), co.getTotalPrice(), co.getSales().getDoneType(), OrderType.CLOSING_ORDER, co.getOrderDate(), co.getRequestStatus(), null, co.getStore().getStoreNumber());
             dailySchedule.add(copr);
@@ -89,7 +90,11 @@ public class ProcessingServiceImpl implements ProcessingService {
                 ProcessingMenuResponseDTO m = new ProcessingMenuResponseDTO(gm.getMenuNumber(), gm.getMenuName(), gm.getPrice(), rm.getQuantity(), gm.getIntroduction(), gm.getImage(), gm.getStore().getStoreNumber());
                 menu.add(m);
             }
-            ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), r.getSales().getDoneType(), r.getOrderType(), r.getRequestStatus(), null, r.getStore().getStoreNumber(), menu);
+            if (r.getSales() == null)
+                doneType = DoneType.NOT_YET;
+            else
+                doneType = r.getSales().getDoneType();
+            ReservationProcessingReadDTO rpr = new ReservationProcessingReadDTO(r.getReserveNumber(), r.getReserveTime(), r.getVisitTime(), r.getUseTime(), r.getPeople(), r.getTotalPrice(), doneType, r.getOrderType(), r.getRequestStatus(), null, r.getStore().getStoreNumber(), menu);
             dailySchedule.add(rpr);
         }
         return dailySchedule;
