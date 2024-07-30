@@ -46,20 +46,17 @@ jobs:
       - name: ECR에 Docker 이미지 push
         run: docker push ${{ steps.login-ecr.outputs.registry }}/web-server:latest
 
-      - name: Set up SSH key for Bastion Host
-        run: echo "${{ secrets.BASTION_PRIVATE_KEY }}" > halmisae.pem
-      - name: Change permissions for SSH keys
-        run: |
-          chmod 600 halmisae.pem
       - name: SSH to Bastion Host
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.BASTION_HOST }}
           username: ${{ secrets.BASTION_USERNAME }}
-          key: halmisae.pem
+          key: ${{ secrets.BASTION_PRIVATE_KEY }}
           script_stop: true
           script: |
-            ssh -o StrictHostKeyChecking=no -i halmisae.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            echo "${{ secrets.EC2_PRIVATE_KEY }}" > ec2_key.pem
+            chmod 600 ec2_key.pem
+            ssh -o StrictHostKeyChecking=no -i "${{ secrets.EC2_PRIVATE_KEY }}" ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
               docker stop web-server || true
               docker rm web-server || true
               docker pull 730335437837.dkr.ecr.ap-northeast-2.amazonaws.com/web-server:latest
