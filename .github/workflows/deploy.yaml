@@ -52,14 +52,12 @@ jobs:
           host: ${{ secrets.BASTION_HOST }}
           username: ${{ secrets.BASTION_USERNAME }}
           key: ${{ secrets.BASTION_PRIVATE_KEY }}
+          port: 22
           script_stop: true
           script: |
-            echo "${{ secrets.EC2_PRIVATE_KEY }}" > ec2_key.pem
-            chmod 600 ec2_key.pem
-            ssh -o StrictHostKeyChecking=no -i ec2_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            ssh -o StrictHostKeyChecking=no -i "${{ secrets.EC2_PRIVATE_KEY }}" ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
               docker stop web-server || true
               docker rm web-server || true
-              docker pull 730335437837.dkr.ecr.ap-northeast-2.amazonaws.com/web-server:latest
-              docker run -d --name web-server -p 8080:8080 730335437837.dkr.ecr.ap-northeast-2.amazonaws.com/web-server:latest
+              docker pull ${{ steps.login-ecr.outputs.registry }}/web-server:latest
+              docker run -d --name web-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/web-server:latest
             EOF
-            rm ec2_key.pem
