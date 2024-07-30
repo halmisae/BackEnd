@@ -62,3 +62,4 @@ jobs:
               docker pull 730335437837.dkr.ecr.ap-northeast-2.amazonaws.com/web-server:latest
               docker run -d --name web-server -p 8080:8080 730335437837.dkr.ecr.ap-northeast-2.amazonaws.com/web-server:latest
             EOF
+            rm ec2_key.pem
