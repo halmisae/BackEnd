@@ -80,7 +80,11 @@ public class ProcessingServiceImpl implements ProcessingService {
         List<Reservation> reservations = reservationRepository.findByReserveTimeAndStoreNumberAndVisitTime(storeNumber, today.atStartOfDay(), today.atTime(LocalTime.MAX));
         DoneType doneType;
         for (ClosingOrder co : closingOrders) {
-            ClosingOrderProcessingReadDTO copr = new ClosingOrderProcessingReadDTO(co.getOrderNumber(), co.getQuantity(), co.getTotalPrice(), co.getSales().getDoneType(), OrderType.CLOSING_ORDER, co.getOrderDate(), co.getRequestStatus(), null, co.getStore().getStoreNumber());
+            if (co.getSales() == null)
+                doneType = DoneType.NOT_YET;
+            else
+                doneType = co.getSales().getDoneType();
+            ClosingOrderProcessingReadDTO copr = new ClosingOrderProcessingReadDTO(co.getOrderNumber(), co.getQuantity(), co.getTotalPrice(), doneType, OrderType.CLOSING_ORDER, co.getOrderDate(), co.getRequestStatus(), null, co.getStore().getStoreNumber());
             dailySchedule.add(copr);
         }
         for (Reservation r : reservations) {
