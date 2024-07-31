@@ -2,13 +2,13 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url : jdbc:mysql://halmisae-db.cz882eka271p.ap-northeast-2.rds.amazonaws.com:3306/awsdb?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
-    url: jdbc:mysql://localhost:3306/halmisae?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul  # local DB connection
+    url : jdbc:mysql://halmisae-db.cz882eka271p.ap-northeast-2.rds.amazonaws.com:3306/awsdb?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+#    url: jdbc:mysql://localhost:3306/halmisae?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul  # local DB connection
 #    url: jdbc:mysql://localhost:3307/halmisae?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul  # SSH RDS connection
 #    url: jdbc:mysql://mydb2.cz882eka271p.ap-northeast-2.rds.amazonaws.com:3306/halmisae?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul # HTTP RDS connection
     username: root
-    password: 1111  # local DB password
-#    password: kosta6006!  # RDS password
+#    password: 1111  # local DB password
+    password: kosta6006!  # RDS password
   messages:
     basename: custom-error-messages
   application:
